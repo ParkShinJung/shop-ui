@@ -13,7 +13,7 @@
               show-arrows
           >
             <v-chip
-                v-for="(data,index) in detailTag"
+                v-for="(data,index) in categoryData"
                 :key="index"
                 outlined
                 color="rgb(60,60,60)"
@@ -21,7 +21,7 @@
                 class="top-chip"
                 active-class="white"
                 @click="byCategory(data.num)"
-            ><span>{{data.main}}</span>
+            ><span>{{data.categoryName}}</span>
             </v-chip>
           </v-chip-group>
       </v-col>
@@ -34,20 +34,20 @@
           <div
               style="display: inline-block;"
               class="pa-3"
-              v-for="(book, index) in bookDatas"
+              v-for="(product, index) in productData.productItems"
               :key="index"
           >
             <v-card
-                style="height: 100%; overflow: hidden; width: 150px"
+                style="height: 100%; overflow: hidden; width: 200px"
                 elevation="4"
                 tile
             >
               <v-img
-                  :src="book.bookThumb"
+                  :src="product.mainImg"
                   alt="bookThumb"
                   height="100%"
                   loading="lazy"
-                  @click="widthSize(book)"
+                  @click="widthSize(product)"
               >
                 <template v-slot:placeholder>
                   <v-row
@@ -62,6 +62,9 @@
                   </v-row>
                 </template>
               </v-img>
+              <div>
+                {{ product.title }}
+              </div>
             </v-card>
           </div>
         </div>
@@ -269,7 +272,7 @@
 <script>
 import vClickOutside from 'v-click-outside';
 import SearchMenu from "@/views/SearchMenu";
-import { getMemberList } from "@/api/account"
+import {getProductList, getCategoryList} from "@/api/product";
 
 export default {
   name: "About",
@@ -318,6 +321,8 @@ export default {
       pageSize: 10,
       keyword: '',
     },
+    productData: [],
+    categoryData: [],
 
     //컴포넌트 관련 데이터 (Dialog)
     dialog: false,              //wishlist Dialog
@@ -345,7 +350,8 @@ export default {
     this.$eventBus.$on('searchData', (payload)=>{
       console.log(payload);
     });
-    this.getMembers()
+    this.getProduct()
+    this.getCategory()
   },
 
   methods: {
@@ -361,11 +367,23 @@ export default {
           })
     },*/
 
-    getMembers() {
-
+    async getProduct() {
       try {
-        const res = getMemberList(this.searchQuery)
-        console.log(res)
+        const res = getProductList(this.searchQuery)
+        console.log('res', res)
+        this.productData = (await res).data
+        console.log('productData', this.productData)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
+    async getCategory() {
+      try {
+        const res = getCategoryList()
+        console.log('res', res)
+        this.categoryData = (await res).data.categoryItems
+        console.log('categoryData', this.categoryData)
       } catch (e) {
         console.log(e)
       }

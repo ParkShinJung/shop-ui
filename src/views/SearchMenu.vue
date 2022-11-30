@@ -1,12 +1,34 @@
 <template>
     <v-app-bar
-        fixed
+        absolute
+        color="#6A76AB"
         dark
-        elevation="0"
-        color="rgb(40,40,40)"
-        dense app
+        shrink-on-scroll
+        prominent
+        src="https://picsum.photos/1920/1080?random"
+        fade-img-on-scroll
+        scroll-target="#scrolling-techniques-3"
         class="justify-center"
     >
+      <template v-slot:img="{ props }">
+        <v-img
+            v-bind="props"
+            gradient="to top right, rgba(100,115,201,.7), rgba(25,32,72,.7)"
+        ></v-img>
+      </template>
+
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
+      <v-app-bar-title>Title</v-app-bar-title>
+
+      <template v-slot:extension>
+        <v-tabs align-with-title>
+          <v-tab>Tab 1</v-tab>
+          <v-tab>Tab 2</v-tab>
+          <v-tab>Tab 3</v-tab>
+        </v-tabs>
+      </template>
+
         <v-spacer/>
         <v-btn @click="homeLink" class="top-icon" icon>
           <v-icon>mdi-home</v-icon>
@@ -191,6 +213,7 @@ export default {
   data () {
     return {
       completeData : [],
+      drawer: false,
       inputMsg : '',
       autoSearchList : false,
 
