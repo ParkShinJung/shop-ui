@@ -1,4 +1,5 @@
 <template>
+  <v-form>
     <v-app-bar
         absolute
         color="#6A76AB"
@@ -29,68 +30,68 @@
         </v-tabs>
       </template>
 
-        <v-spacer/>
-        <v-btn @click="homeLink" class="top-icon" icon>
-          <v-icon>mdi-home</v-icon>
-        </v-btn>
+      <v-spacer/>
+      <v-btn @click="homeLink" class="top-icon" icon>
+        <v-icon>mdi-home</v-icon>
+      </v-btn>
 
-        <v-card
-            elevation="0"
-            v-click-outside="onClickOutside"
-            class="main-search"
-        >
-          <v-text-field
-              class="main-input"
-              hide-details
-              flat
-              v-model="inputMsg"
-              @focus="autoSearchList = true"
-              @keyup="autoSearchList = true"
-              background-color="rgb(20,20,20)"
-          ></v-text-field>
-          <v-expand-transition>
-            <div class="search-list-div" v-show="autoSearchList">
-              <v-list class="pa-0 ma-0 search-list">
-                <v-list-item-group>
-                  <v-hover v-slot="{ hover }"
-                           v-for="(item,index) in completeData"
-                           :key="index">
-                    <v-list-item
-                        class="pa-3 pl-5 top-list"
-                        :class="{ 'on-hover': hover }"
-                        @click="inputMsg=item.bookTitle">
-                      <v-card
-                          class="search-list-img"
-                          elevation="1"
-                          tile>
-                        <img
-                            :src="item.bookThumb"
-                            alt="bookThumb"
-                            height="100%"
-                            @click="detailView(item.bid)">
-                      </v-card>
-                      <v-list-item-content class="pl-8">
-                        <v-list-item-title>
-                          <span class="search-list-title" @click="detailView(item.bid)"> {{item.bookTitle}} </span>
-                        </v-list-item-title>
+      <v-card
+          elevation="0"
+          v-click-outside="onClickOutside"
+          class="main-search"
+      >
+        <v-text-field
+            class="main-input"
+            hide-details
+            flat
+            v-model="inputMsg"
+            @focus="autoSearchList = true"
+            @keyup="autoSearchList = true"
+            background-color="rgb(20,20,20)"
+        ></v-text-field>
+        <v-expand-transition>
+          <div class="search-list-div" v-show="autoSearchList">
+            <v-list class="pa-0 ma-0 search-list">
+              <v-list-item-group>
+                <v-hover v-slot="{ hover }"
+                         v-for="(item,index) in completeData"
+                         :key="index">
+                  <v-list-item
+                      class="pa-3 pl-5 top-list"
+                      :class="{ 'on-hover': hover }"
+                      @click="inputMsg=item.bookTitle">
+                    <v-card
+                        class="search-list-img"
+                        elevation="1"
+                        tile>
+                      <img
+                          :src="item.bookThumb"
+                          alt="bookThumb"
+                          height="100%"
+                          @click="detailView(item.bid)">
+                    </v-card>
+                    <v-list-item-content class="pl-8">
+                      <v-list-item-title>
+                        <span class="search-list-title" @click="detailView(item.bid)"> {{item.bookTitle}} </span>
+                      </v-list-item-title>
 
-                        <v-list-item-subtitle class="pt-2">
-                          <span class="search-list-subtitle"> {{ item.bookAuthor }} | {{item.bookPublisher}}</span>
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
+                      <v-list-item-subtitle class="pt-2">
+                        <span class="search-list-subtitle"> {{ item.bookAuthor }} | {{item.bookPublisher}}</span>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
 
-                  </v-hover>
+                </v-hover>
 
-                </v-list-item-group>
-              </v-list>
-            </div>
-          </v-expand-transition>
-        </v-card>
+              </v-list-item-group>
+            </v-list>
+          </div>
+        </v-expand-transition>
+      </v-card>
 
-        <v-btn class=" search-icon" @click="mainSearch" icon>
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
+      <v-btn class=" search-icon" @click="mainSearch" icon>
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
 
 
       <v-spacer class="top-icon"></v-spacer>
@@ -202,6 +203,81 @@
         </v-card>
       </v-dialog>
     </v-app-bar>
+    <v-form>
+      <v-navigation-drawer
+          color="rgb(40,40,40)"
+          class="index-nav"
+          :mini-variant.sync="mini"
+          absolute
+      >
+        <div class="index-div">
+          <div class="justify-end d-flex">
+            <v-btn icon color="grey lighten-2" @click="mini=!mini" class="mr-2">
+              <v-icon>{{ mini ? 'mdi-arrow-right-drop-circle-outline' : 'mdi-arrow-left-drop-circle-outline' }}</v-icon>
+            </v-btn>
+          </div>
+          <v-list
+              color="rgb(40,40,40)"
+          >
+              <v-list-item to="/">
+                <v-list-item-icon>
+                  <v-icon color="rgb(190,190,190)">mdi-home</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-title style="color: rgb(190,190,190)">Home</v-list-item-title>
+              </v-list-item>
+
+              <v-list-group
+                  :value="false"
+                  prepend-icon="mdi-account-circle grey--text"
+              >
+                <template v-slot:activator >
+                  <v-list-item-title style="color: rgb(190,190,190)">Category</v-list-item-title>
+                </template>
+
+                <v-list-item
+                    :value="true"
+                    v-for="item in detailTag"
+                    :key="item.main"
+                    v-model="item.active"
+                    link
+                    :to="{
+                      path: `/category/${item.num}`,
+                    }"
+                >
+                  <v-list-item-content>
+                    <v-list-item-title style="color: rgb(190,190,190)" v-text="item.main"></v-list-item-title>
+                  </v-list-item-content>
+
+                </v-list-item>
+
+              </v-list-group>
+
+              <v-divider class="ma-6 white" />
+
+
+              <v-list-item
+                  v-for="(data,index) in links"
+                  :key="index"
+                  :to="data.link"
+                  link
+              >
+                <v-list-item-icon >
+                  <v-icon color="rgb(190,190,190)">{{ data.icon }}</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title style="color: rgb(190,190,190)">{{ data.name }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-divider class="ma-6 white" />
+          </v-list>
+        </div>
+      </v-navigation-drawer>
+    </v-form>
+  </v-form>
+
 </template>
 
 <script>
@@ -216,6 +292,33 @@ export default {
       drawer: false,
       inputMsg : '',
       autoSearchList : false,
+      mini : true,
+
+      selectList:0,
+      componentKey:0,
+      detailTag : [
+        { main: '소설', num: '00', },
+        { main : '시/에세이', num: '01', },
+        { main : '자기계발', num: '02', },
+        { main : '인문', num: '03', },
+        { main : '역사/문화', num: '04', },
+        { main : '종교', num: '05', },
+        { main : '정치/사회', num: '06', },
+        { main : '예술/대중문화', num: '07', },
+        { main : '과학', num: '08', },
+        { main : '기술/공학', num: '09', },
+        { main : '컴퓨터/IT', num: '10', },
+      ],
+      links: [
+        {icon:'mdi-cart', name:'Cart', link:'/my/cart',  show:true},
+        {icon:'mdi-library', name:'Wish List', link:'/my/wish', show:true},
+        {icon:'mdi-book', name:'Comment', link:'/my/comment', show:true},
+        {icon:'mdi-credit-card', name:'Order', link:'/my/order',  show:true},
+        {icon:'mdi-account-box', name:'infoEdit', link:'/my/infoEdit',  show:true},
+      ],
+
+      categoryList : false,
+      bySearch: '',
 
       loginCheck: this.$store.state.member.loginData.loginState,
       hideMenu : false,
@@ -406,4 +509,6 @@ export default {
     height: 60px;
   }
 }
+
+
 </style>
