@@ -10,6 +10,7 @@
         fade-img-on-scroll
         scroll-target="#scrolling-techniques-3"
         class="justify-center"
+        style="margin-left: 56px"
     >
       <template v-slot:img="{ props }">
         <v-img
@@ -203,12 +204,14 @@
         </v-card>
       </v-dialog>
     </v-app-bar>
+
     <v-form>
       <v-navigation-drawer
           color="rgb(40,40,40)"
           class="index-nav"
           :mini-variant.sync="mini"
           absolute
+          expand-on-hover
       >
         <div class="index-div">
           <div class="justify-end d-flex">
