@@ -19,6 +19,7 @@
     "url-loader": "^4.1.1",
     "v-click-outside": "^3.1.2",
     "vue": "^2.7.5",
+    "vue-daum-postcode": "^0.10.0",
     "vue-fixed-header": "^3.2.15",
     "vue-i18n": "^8.27.2",
     "vue-loader": "^13.7.3",

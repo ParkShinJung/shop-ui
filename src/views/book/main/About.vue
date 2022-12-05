@@ -272,7 +272,8 @@
 <script>
 import vClickOutside from 'v-click-outside';
 import SearchMenu from "@/views/SearchMenu";
-import {getProductList, getCategoryList} from "@/api/product";
+import {getProductList} from "@/api/product";
+import {getCategoryList} from "@/api/common";
 
 export default {
   name: "About",
@@ -322,7 +323,8 @@ export default {
       keyword: '',
     },
     productData: [],
-    categoryData: [],
+    categoryData: [
+    ],
 
     //컴포넌트 관련 데이터 (Dialog)
     dialog: false,              //wishlist Dialog
@@ -379,10 +381,19 @@ export default {
     },
 
     async getCategory() {
+      this.categoryData = [
+        { categoryId: '', categoryName: '전체' }
+      ]
       try {
         const res = getCategoryList()
         console.log('res', res)
-        this.categoryData = (await res).data.categoryItems
+        const result = (await res).data.categoryItems
+        result.forEach(aaa => {
+          this.categoryData.push({
+            categoryName: aaa.categoryName,
+            value: aaa.categoryId
+          })
+        })
         console.log('categoryData', this.categoryData)
       } catch (e) {
         console.log(e)
