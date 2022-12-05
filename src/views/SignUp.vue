@@ -31,9 +31,9 @@
 
               <v-divider></v-divider>
 
-              <v-stepper-step color="teal accent-5" step="3">
-                프로필 등록
-              </v-stepper-step>
+<!--              <v-stepper-step color="teal accent-5" step="3">-->
+<!--                프로필 등록-->
+<!--              </v-stepper-step>-->
             </v-stepper-header>
 
             <v-stepper-items>
@@ -65,7 +65,7 @@
                         <v-text-field
                             filled outlined
                             :rules="[rules.length]"
-                            label="닉네임" class="pa-2"
+                            label="아이디" class="pa-2"
                             v-model="nickName"
                         >
                           <template v-slot:prepend-inner>
@@ -132,6 +132,79 @@
                         <span v-if="!matchPass" class="red--text text--lighten-1" >비밀번호가 일치하지 않습니다.</span>
                       </template>
                     </v-text-field>
+
+                    <v-row class="ma-0">
+                      <v-col cols="8" class="pa-0">
+                        <v-text-field
+                            v-model="zipCode"
+                            :rules="[rules.address, rules.length]"
+                            filled outlined class="pa-2"
+                            disabled
+                            label="우편번호"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="4"  class="pa-0">
+                          <template>
+                            <v-btn color="teal accent-6" style="font-weight: bold; top: 17px" class="ml-1" @click="daumPost = !daumPost">
+                              우편번호찾기
+                            </v-btn>
+                          </template>
+                        <section v-if="daumPost" class="daum">
+                          <div class="dim" @click="daumPost = !daumPost" />
+                          <vue-daum-postcode @complete="onCompl"/>
+                        </section>
+                      </v-col>
+
+                    </v-row>
+
+                    <v-text-field
+                        v-model="address"
+                        :rules="[rules.address, rules.length]"
+                        filled outlined class="pa-2"
+                        disabled
+                        label="주소"
+                    ></v-text-field>
+
+                    <v-text-field
+                        v-model="address2"
+                        :rules="[rules.address, rules.length]"
+                        filled outlined class="pa-2"
+                        label="상세주소"
+                    ></v-text-field>
+
+                    <div>
+                      <v-menu
+                          ref="menu"
+                          v-model="menu"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                              v-model="date"
+                              label="생년월일"
+                              prepend-icon="mdi-calendar"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                            v-model="date"
+                            placehol
+                            :active-picker.sync="activePicker"
+                            :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
+                            min="1950-01-01"
+                            @change="save"
+                        ></v-date-picker>
+                      </v-menu>
+                    </div>
+
+
+
+
                     <v-checkbox
                         class="pl-3"
                         v-model="agreement"
@@ -367,11 +440,20 @@ export default {
 
       fullName : undefined,
       nickName : undefined,
+      zipCode: '',
+      address: '',
+      address2: '',
       agreement: false,
       email: undefined,
       form: false,
       isLoading: false,
       phoneNum: undefined,
+
+      daumPost: false,
+
+      activePicker: null,
+      date: null,
+      menu: false,
 
       // step 2
       imageUrl: undefined,
@@ -380,6 +462,7 @@ export default {
       rules: {
         email: v => /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/.test(v) || '정확한 이메일 형식을 입력해주세요',
         name : v => /^[가-힣a-zA-Z]+$/.test(v) || '이름을 확인해주세요',
+        address : v => /^[가-힣a-zA-Z]+$/.test(v) || '주소를 확인해주세요',
         length : v=> (v||'').length >1 || '길이는 최소 2글자 이상입니다',
         phone : v => /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/.test(v) || '올바른 전화번호 형식을 입력해주세요',
         required: v => !!v || '개인정보 수집 및 이용안내 동의해 주세요',
@@ -393,6 +476,9 @@ export default {
     }
   },
   watch: {
+    menu (val) {
+      val && setTimeout(() => (this.activePicker = 'YEAR'))
+    },
     newPassword(val) {
       this.matchPass = val === this.confirmNewPassword;
     },
@@ -410,6 +496,15 @@ export default {
     }
   },
   methods: {
+    onCompl(result) {
+      this.address = result.address
+      this.zipCode = result.zonecode
+      this.daumPost = false
+    },
+
+    save (date) {
+      this.$refs.menu.save(date)
+    },
     // step 1
     // 중복체크
     nickCheck(nick){
@@ -417,10 +512,10 @@ export default {
           .then(response=>{
             if(response.data > 0){
               this.nickNameCheck = false
-              this.snackbarDelay("중복된 닉네임이 존재합니다")
+              this.snackbarDelay("중복된 아이디가 존재합니다")
             }else{
               this.nickNameCheck = true
-              this.snackbarDelay("사용 가능한 닉네임입니다")
+              this.snackbarDelay("사용 가능한 아이디입니다")
             }
           })
           .catch(error =>{
@@ -566,4 +661,33 @@ export default {
   overflow: hidden;
   border: 0;
 }
+.daum {
+  position: absolute;
+  z-index: 10000;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;}
+  .dim{
+    z-index: 1000;
+    position: fixed;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    overflow-y: hidden;
+  }
+  .vue-daum-postcode {
+    margin-top: 5%;
+    height: 60%;
+    z-index: 1001;
+    position: absolute;
+    width: 90%;
+    top: 30%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    overflow: auto;
+  }
+
 </style>
