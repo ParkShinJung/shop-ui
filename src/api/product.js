@@ -10,3 +10,13 @@ export function getProductList(params) {
     }
     return request.get(url, config)
 }
+
+export function getProductDetailByProductId(productId) {
+    const url = '/product/' + productId
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+    return request.get(url, config)
+}

@@ -98,7 +98,7 @@ export default {
         links: [
           {icon:'mdi-cart', name:'Cart', link:'/my/cart',  show:true},
           {icon:'mdi-library', name:'Wish List', link:'/my/wish', show:true},
-          {icon:'mdi-book', name:'Comment', link:'/my/comment', show:true},
+          {icon:'mdi-product', name:'Comment', link:'/my/comment', show:true},
           {icon:'mdi-credit-card', name:'Order', link:'/my/order',  show:true},
           {icon:'mdi-account-box', name:'infoEdit', link:'/my/infoEdit',  show:true},
         ],

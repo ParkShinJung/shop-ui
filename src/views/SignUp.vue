@@ -1,8 +1,8 @@
 <template>
   <v-container fluid class="pa-0">
-    <v-row class="ma-0 align-center" style="background-color: rgb(20,20,20); height: 100vh">
+    <v-row class="ma-0 align-center" style="background-color: rgb(20,20,20); height: 100%">
       <v-col class="pa-0 justify-center d-flex">
-        <v-card rounded flat width="650px" color="rgb(40,40,40)">
+        <v-card rounded flat width="650px" style="margin-top: 60px" color="rgb(40,40,40)">
           <div style="height: 24px; background-color: rgb(30,30,30)" class="align-center justify-end d-flex">
             <v-btn width="14px" elevation="0" height="14px" color="yellow darken-2 mr-2" fab></v-btn>
             <v-btn width="14px" elevation="0" height="14px" color="red darken-2 mr-2" fab></v-btn>
@@ -220,12 +220,21 @@
                   </v-form>
                 </v-card>
 
-                <v-card-actions class="pa-4" style="background-color: rgb(40,40,40)">
+                <v-card class="pa-4" style="background-color: rgb(40,40,40)">
                   <v-btn
                       text
                       @click="$router.push({path:'/login'})"
                   >
                     cancel
+                  </v-btn>
+                  <v-btn
+                      :loading="isLoading"
+                      class="white--text" rounded
+                      color="teal accent-5"
+                      style="float: right"
+                      depressed @click="signCommit"
+                  >
+                    sign-up
                   </v-btn>
                   <v-spacer></v-spacer>
                   <v-btn
@@ -237,7 +246,7 @@
                   >
                     sign-up
                   </v-btn>
-                </v-card-actions>
+                </v-card>
               </v-stepper-content>
 
 
