@@ -20,7 +20,7 @@
                 text-color="rgb(240,240,240)"
                 class="top-chip"
                 active-class="white"
-                @click="byCategory(data.num)"
+                @click="byCategory(data.categoryId)"
             ><span>{{data.categoryName}}</span>
             </v-chip>
           </v-chip-group>
@@ -30,7 +30,7 @@
     <v-row style="background-color: rgb(25,25,25)" class="mb-6">
       <!--List Card-->
       <v-col class="no-gutters ml-md-4 ml-sm-4 ml-16">
-        <div style="text-align: start;">
+        <div v-if="productData.productItems && productData.productItems.length > 0" style="text-align: start;">
           <div
               style="display: inline-block;"
               class="pa-3"
@@ -67,6 +67,11 @@
               </div>
             </v-card>
           </div>
+        </div>
+        <div v-else>
+          <span style="color: white">
+            해당하는 카테고리의 제품이 존재하지않습니다.
+          </span>
         </div>
       </v-col>
 
@@ -308,6 +313,7 @@ export default {
       page: 1,
       pageSize: 10,
       keyword: '',
+      categoryId: ''
     },
     productData: [],
     categoryData: [],
@@ -378,13 +384,19 @@ export default {
         result.forEach(aaa => {
           this.categoryData.push({
             categoryName: aaa.categoryName,
-            value: aaa.categoryId
+            categoryId: aaa.categoryId
           })
         })
         console.log('categoryData', this.categoryData)
       } catch (e) {
         console.log(e)
       }
+    },
+
+    byCategory(categoryId) {
+      console.log(categoryId)
+      this.searchQuery.categoryId = categoryId
+      this.getProduct()
     },
 
     async getProductDetail(product) {
