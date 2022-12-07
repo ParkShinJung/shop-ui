@@ -98,14 +98,14 @@
 
                   <v-img
                       class="select-book-img"
-                      :src="selectBook.bookThumb"
+                      :src="productDetail.mainImg"
                   ></v-img>
 
                 <v-col cols="12" md="10">
-                  <h4 class="pt-4" style="color: rgb(220,220,220)"> {{selectBook.bookTitle}} </h4>
+                  <h4 class="pt-4" style="color: rgb(220,220,220)"> {{productDetail.title}} </h4>
                 </v-col>
 
-                 <v-card-subtitle style="color: rgb(220,220,220)">{{selectBook.bookAuthor}}&nbsp;|&nbsp;{{selectBook.bookPublisher}}</v-card-subtitle>
+                 <v-card-subtitle style="color: rgb(220,220,220)">{{productDetail.price}}원</v-card-subtitle>
 
 
                 <div>
@@ -152,7 +152,7 @@
                             v-on="on"
                             elevation="2"
                             fab color="rgb(50,50,50)"
-                            @click.stop="setComponentData(selectBook.bid)"
+                            @click.stop="setComponentData(productDetail.productId)"
                         >
                           <v-icon color="pink" large>
                             mdi-heart
@@ -170,14 +170,14 @@
                             v-on="on"
                             elevation="2"
                             fab color="rgb(50,50,50)"
-                            @click.stop="detailView(selectBook.bid)"
+                            @click.stop="detailView(productDetail.productId)"
                         >
                           <v-icon color="yellow darken-2" large>
-                            mdi-book-open-variant
+                            mdi-cake-layered
                           </v-icon>
                         </v-btn>
                       </template>
-                      <span>책 보러가기</span>
+                      <span>상품 보러가기</span>
                     </v-tooltip>
                   </v-col>
                 </v-card-actions>
@@ -292,27 +292,14 @@ export default {
     cartDialogMsg : '',
 
     //선택된 책 보기
-    show : {data:false , bid: null},
+    show : {data:false , productId: null},
     selectBook : '',
     selectKeywords : '',
 
 
     //상단 카테고리
     tab : null,
-    detailTag : [
-      { main : '전체' },
-      { main: '소설', num: '00', },
-      { main : '시/에세이', num: '01', },
-      { main : '자기계발', num: '02', },
-      { main : '인문', num: '03', },
-      { main : '역사/문화', num: '04', },
-      { main : '종교', num: '05', },
-      { main : '정치/사회', num: '06', },
-      { main : '예술/대중문화', num: '07', },
-      { main : '과학', num: '08', },
-      { main : '기술/공학', num: '09', },
-      { main : '컴퓨터/IT', num: '10', },
-    ],
+
     completeData : [],
     inputMsg : '',
 
@@ -323,8 +310,8 @@ export default {
       keyword: '',
     },
     productData: [],
-    categoryData: [
-    ],
+    categoryData: [],
+    productDetail: {},
 
     //컴포넌트 관련 데이터 (Dialog)
     dialog: false,              //wishlist Dialog
@@ -360,7 +347,7 @@ export default {
     //search
     //Get Main Book Info
 /*    getBookInfo(){
-      this.$axios.get('book/info')
+      this.$axios.get('product/info')
           .then(response=>{
             this.bookDatas = response.data
           })
@@ -400,39 +387,63 @@ export default {
       }
     },
 
+    async getProductDetail(product) {
+      if(this.show.data === true){  //책 정보가 열려있을때
+        if(this.show.productId === product.productId){ //같은 책이라면 정보 닫기
+          this.show.data= !this.show.data
+        }
+      }else{  //닫혀있으면 열기
+        this.show.data= !this.show.data
+      }
+      this.show.productId = product.productId
+      this.productDetail=product
+      // this.selectKeywords = product.bookKeyword.split(',')
+
+/*      console.log('productId', product.productId)
+      try {
+        const res = getProductDetailByProductId(product.productId)
+        console.log('res', res)
+        this.productDetail = (await res).data
+        console.log('productDetail', this.productDetail)
+      } catch (e) {
+        console.log(e)
+      }*/
+    },
+
     //화면 크기에 따라 다른 method
-    widthSize(book){
+    widthSize(product){
       let x = window.innerWidth
 
       if(x>=600){
-        this.openInfo(book)
+        //this.openInfo(product)
+        this.getProductDetail(product)
       }else{
-        this.detailView(book.bid)
+        this.getProductDetail(product)
       }
     },
     //책 보러가기
-    detailView(bid){
-      this.$router.push({name: 'DetailView' ,query: {bid}});
+    detailView(productId){
+      this.$router.push('/detailView/' + productId)
     },
     //Select Book Info
-    openInfo(book){
+    openInfo(product){
       if(this.show.data === true){  //책 정보가 열려있을때
-         if(this.show.bid === book.bid){ //같은 책이라면 정보 닫기
+         if(this.show.bid === product.productId){ //같은 책이라면 정보 닫기
          this.show.data= !this.show.data
         }
       }else{  //닫혀있으면 열기
         this.show.data= !this.show.data
       }
-      this.show.bid = book.bid
-      this.selectBook=book
-      this.selectKeywords = book.bookKeyword.split(',')
+      this.show.bid = product.productId
+      this.selectBook=product
+      // this.selectKeywords = product.bookKeyword.split(',')
     },
 
 
 
     //키워드로 검색
 /*    keywordSearch(data){
-      this.$axios.get("book/keyword/"+data)
+      this.$axios.get("product/keyword/"+data)
           .then(response=>{
             this.bookDatas = response.data
           }).catch(error =>{
@@ -464,7 +475,7 @@ export default {
       if(num==null){
         this.getBookInfo()
       }else{
-        this.$axios.get("book/category/"+num)
+        this.$axios.get("product/category/"+num)
             .then(response=>{
               this.bookDatas = response.data
             }).catch(error =>{

@@ -20,25 +20,25 @@ export const routes = [
             {
                 path: '/',
                 name: 'About',
-                component: () => import(/* webpackChunkName: "about" */ '../views/book/main/About.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '../views/product/main/About.vue'),
                 props: true,
             },
             {
                 path: '/search',
                 name : 'search',
-                component: () => import(/* webpackChunkName: "about" */ '../views/book/main/search.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '../views/product/main/search.vue'),
                 props: true,
             },
             {
                 path: '/dashBoard',
                 name : 'dashBoard',
-                component: () => import(/* webpackChunkName: "about" */ '../views/book/main/Dashboard.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '../views/product/main/Dashboard.vue'),
                 props: true,
             },
             {
                 path: '/category/:category',
                 name : 'category',
-                component: () => import(/* webpackChunkName: "about" */ '@/views/book/main/category.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '@/views/product/main/category.vue'),
                 props: true,
             },
 
@@ -103,12 +103,12 @@ export const routes = [
     {
         path: '/mainBook',
         name: 'MainBook',
-        component: () =>  import('@/views/book/MainBook')
+        component: () =>  import('@/views/product/MainBook')
     },
     {
-        path: '/detailView',
+        path: '/detailView/:productId',
         name: 'DetailView',
-        component: () =>  import('@/views/book/DetailView')
+        component: () =>  import('@/views/product/DetailView')
     },
     {
         path: '/order',
