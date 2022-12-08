@@ -36,7 +36,7 @@ export const routes = [
                 props: true,
             },
             {
-                path: '/category/:category',
+                path: '/category/:categoryId',
                 name : 'category',
                 component: () => import(/* webpackChunkName: "about" */ '@/views/product/main/category.vue'),
                 props: true,

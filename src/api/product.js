@@ -20,3 +20,13 @@ export function getProductDetailByProductId(productId) {
     }
     return request.get(url, config)
 }
+
+export function getProductListByCategoryId(categoryId) {
+    const url = '/product/category/' + categoryId
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+    return request.get(url, config)
+}
