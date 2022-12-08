@@ -7,6 +7,7 @@ import axios from './plugins/axios'
 import vClickOutside from 'v-click-outside'
 import "@/plugins/fontAwesomeIcon"
 
+import VueDaumPostcode from "vue-daum-postcode"
 
 Vue.prototype.$eventBus = new Vue();
 Vue.prototype.$axios = axios
@@ -14,6 +15,7 @@ Vue.prototype.$axios = axios
 
 Vue.use(vClickOutside)
 Vue.config.productionTip = false
+Vue.use(VueDaumPostcode)
 
 new Vue({
   router,

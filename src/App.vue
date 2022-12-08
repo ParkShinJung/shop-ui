@@ -1,11 +1,12 @@
 <template>
 <v-app style="background-color: rgb(25,25,25); min-height: 100vh">
+
   <SearchMenu
       @searchData="searchByMenu"
       :key="searchComponentKey"
   ></SearchMenu>
 
- <main>
+ <main style="margin-top: 176px">
    <v-container fluid class="pa-0">
      <router-view></router-view>
    </v-container>

@@ -34,7 +34,7 @@
           <div
               style="display: inline-block;"
               class="pa-3"
-              v-for="(book, index) in bookDatas"
+              v-for="(book, index) in productList"
               :key="index"
           >
             <v-card
@@ -43,7 +43,7 @@
                 tile
             >
               <v-img
-                  :src="book.bookThumb"
+                  :src="book.mainImg"
                   alt="bookThumb"
                   height="100%"
                   loading="lazy"
@@ -93,12 +93,12 @@
               <div class="align-center d-flex flex-column pt-8">
                 <v-img
                     class="select-book-img"
-                    :src="selectBook.bookThumb"
+                    :src="selectBook.mainImg"
                 ></v-img>
 
-                <h4 class="pt-4" style="color: rgb(220,220,220)"> {{selectBook.bookTitle}} </h4>
+                <h4 class="pt-4" style="color: rgb(220,220,220)"> {{selectBook.title}} </h4>
 
-                <v-card-subtitle style="color: rgb(220,220,220)">{{selectBook.bookAuthor}} | {{selectBook.bookPublisher}}</v-card-subtitle>
+                <v-card-subtitle style="color: rgb(220,220,220)">{{selectBook.price}}원</v-card-subtitle>
 
                 <div>
                   <v-chip
@@ -241,6 +241,7 @@
 
 <script>
 import SearchMenu from "@/views/SearchMenu";
+import {getProductListByCategoryId} from "@/api/product";
 export default {
   name: "category",
   components: {SearchMenu},
@@ -252,8 +253,9 @@ export default {
 
 
       //선택된 책 보기
-      show : {data:false , bid: null},
+      show : {data:false , productId: null},
       selectBook : '',
+      selectProduct: '',
       selectKeywords : '',
 
 
@@ -442,6 +444,10 @@ export default {
       inputMsg : '',
 
 
+      categoryId: this.$route.params.categoryId,
+      productList: [],
+
+
 
       //컴포넌트 관련 데이터 (Dialog)
       dialog: false,              //wishlist Dialog
@@ -457,8 +463,25 @@ export default {
       if (to.path !== from.path) this.byCategory(this.$route.params.category);
     },
   },
+  created() {
+    console.log('categoryId', this.categoryId)
+    this.init()
+  },
 
   methods: {
+    init() {
+      this.getProductList()
+    },
+    async getProductList() {
+      try {
+        const res = getProductListByCategoryId(this.categoryId)
+        this.productList = (await res).data.productItems
+        console.log('productListByCategory', this.productList)
+
+      } catch (e) {
+        console.log(e)
+      }
+    },
     searchByMenu(val){
       this.$axios.get("book/search/" + val)
           .then(response => {
@@ -505,14 +528,14 @@ export default {
     //Select Book Info
     openInfo(book){
       if(this.show.data === true){  //책 정보가 열려있을때
-        if(this.show.bid === book.bid){ //같은 책이라면 정보 닫기
+        if(this.show.productId === book.productId){ //같은 책이라면 정보 닫기
           this.show.data= !this.show.data
         }
       }else{  //닫혀있으면 열기
         this.show.data= !this.show.data
       }
-      this.show.bid = book.bid
-      this.selectBook=book
+      this.show.productId = book.productId
+      this.selectProduct=book
       this.selectKeywords = book.bookKeyword.split(',')
     },
     /*

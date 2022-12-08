@@ -38,8 +38,8 @@
 <script>
 import $ from 'jquery'
 
-import About from "@/views/book/main/About";
-import MainBook from "@/views/book/MainBook";
+import About from "@/views/product/main/About";
+import MainBook from "@/views/product/MainBook";
 
 
 export default {
