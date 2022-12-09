@@ -37,6 +37,7 @@ const member = {
             state.userData.mid = data.mid
             state.userData.phoneNum = data.phoneNum
             state.userData.userRule = data.userRule
+            state.userData.name = data.name
 
             console.log("loginData : " + state.loginData)
             console.log("putUserInfo : " + state.userData)

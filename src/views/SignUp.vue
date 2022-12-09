@@ -45,7 +45,7 @@
                       class="pt-4"
                   >
                     <v-text-field
-                        v-model="email"
+                        v-model="registParam.email"
                         :rules="[rules.email]"
                         filled outlined
                         label="이메일 주소" class="pa-2"
@@ -55,7 +55,7 @@
                     <v-row class="ma-0">
                       <v-col cols="6" class="pa-0">
                         <v-text-field
-                            v-model="fullName"
+                            v-model="registParam.name"
                             :rules="[rules.name, rules.length]"
                             filled outlined class="pa-2"
                             label="이름"
@@ -66,13 +66,13 @@
                             filled outlined
                             :rules="[rules.length]"
                             label="아이디" class="pa-2"
-                            v-model="nickName"
+                            v-model="registParam.memberId"
                         >
                           <template v-slot:prepend-inner>
-                            <v-icon size="25" class="pr-2" :color=" nickNameCheck ? 'blue lighten-2' : 'red lighten-2'">mdi-check</v-icon>
+                            <v-icon size="25" class="pr-2" :color=" idCheck ? 'blue lighten-2' : 'red lighten-2'">mdi-check</v-icon>
                           </template>
                           <template v-slot:append>
-                            <v-btn color="teal accent-6" style="font-weight: bold; bottom: 6px" class="ml-1" @click="nickCheck(nickName)">
+                            <v-btn color="teal accent-6" style="font-weight: bold; bottom: 6px" class="ml-1" @click="idDupCheck(registParam.memberId)">
                               중복확인
                             </v-btn>
                           </template>
@@ -82,10 +82,10 @@
                     </v-row>
 
                     <v-text-field
-                        v-model="phoneNum"
+                        v-model="registParam.contact"
                         :rules="[rules.phone]"
                         filled outlined class="pa-2"
-                        @input="replaceNum(phoneNum)"
+                        @input="replaceNum(registParam.contact)"
                         label="연락처"
                     >
                     </v-text-field>
@@ -98,13 +98,13 @@
                         persistent-hint
                         :rules="[rules.passLength,rules.space,rules.small,rules.number]"
                         label="비밀번호"
-                        v-model="newPassword"
-                        @keyup="passwordRules(newPassword) "
-                        @focus="passwordRules(newPassword) "
+                        v-model="registParam.password"
+                        @keyup="passwordRules(registParam.password) "
+                        @focus="passwordRules(registParam.password) "
                     >
                       <template v-slot:append>
-                        <v-icon v-if="(smallPass&&minPass&&numPass&&spacePass)&&newPassword.length>0" class="blue--text text--lighten-2">mdi-check</v-icon>
-                        <v-icon v-if="!(smallPass&&minPass&&numPass&&spacePass)&&newPassword.length>0" class="red--text text--lighten-2">mdi-alert</v-icon>
+                        <v-icon v-if="(smallPass&&minPass&&numPass&&spacePass)&&registParam.password.length>0" class="blue--text text--lighten-2">mdi-check</v-icon>
+                        <v-icon v-if="!(smallPass&&minPass&&numPass&&spacePass)&&registParam.password.length>0" class="red--text text--lighten-2">mdi-alert</v-icon>
                       </template>
                       <template v-slot:message>
                         <span :class="numPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-1'"  class="security-text"> 숫자와 </span>
@@ -136,7 +136,7 @@
                     <v-row class="ma-0">
                       <v-col cols="8" class="pa-0">
                         <v-text-field
-                            v-model="zipCode"
+                            v-model="registParam.zipCode"
                             :rules="[rules.address, rules.length]"
                             filled outlined class="pa-2"
                             disabled
@@ -158,7 +158,7 @@
                     </v-row>
 
                     <v-text-field
-                        v-model="address"
+                        v-model="registParam.address1"
                         :rules="[rules.address, rules.length]"
                         filled outlined class="pa-2"
                         disabled
@@ -166,8 +166,7 @@
                     ></v-text-field>
 
                     <v-text-field
-                        v-model="address2"
-                        :rules="[rules.address, rules.length]"
+                        v-model="registParam.address2"
                         filled outlined class="pa-2"
                         label="상세주소"
                     ></v-text-field>
@@ -183,7 +182,7 @@
                       >
                         <template v-slot:activator="{ on, attrs }">
                           <v-text-field
-                              v-model="date"
+                              v-model="registParam.birthday"
                               label="생년월일"
                               prepend-icon="mdi-calendar"
                               readonly
@@ -192,7 +191,7 @@
                           ></v-text-field>
                         </template>
                         <v-date-picker
-                            v-model="date"
+                            v-model="registParam.birthday"
                             placehol
                             :active-picker.sync="activePicker"
                             :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
@@ -232,7 +231,7 @@
                       class="white--text" rounded
                       color="teal accent-5"
                       style="float: right"
-                      depressed @click="signCommit"
+                      depressed @click="registAccount"
                   >
                     sign-up
                   </v-btn>
@@ -242,7 +241,7 @@
                       :loading="isLoading"
                       class="white--text" rounded
                       color="teal accent-5"
-                      depressed @click="signCommit"
+                      depressed @click="registAccount"
                   >
                     sign-up
                   </v-btn>
@@ -334,8 +333,8 @@
         v-model="snackbar"
     >
       <div class="align-center d-flex">
-        <v-icon size="30" class="pr-2" :color=" nickNameCheck ? 'blue' : 'red'"
-        >{{ nickNameCheck ? 'mdi-checkbox-marked-circle' : 'mdi-alert-circle' }}</v-icon>
+        <v-icon size="30" class="pr-2" :color=" idCheck ? 'blue' : 'red'"
+        >{{ idCheck ? 'mdi-checkbox-marked-circle' : 'mdi-alert-circle' }}</v-icon>
         <span class="black--text">{{snackbarMsg}}</span>
       </div>
     </v-snackbar>
@@ -416,6 +415,7 @@
 
 <script>
 import axios from "axios";
+import { registerAccount, getDupMemberId } from "@/api/account"
 
 export default {
   name: "SignUp.vue",
@@ -443,7 +443,7 @@ export default {
       spacePass: false,
 
       //중복확인
-      nickNameCheck : false,
+      idCheck : false,
       snackbar : false,
       snackbarMsg : '',
 
@@ -468,6 +468,19 @@ export default {
       imageUrl: undefined,
       imgFile:[],
 
+      registParam: {
+        accountType: 'USER',
+        zipCode: '',
+        address1: '',
+        address2: '',
+        birthday: '',
+        contact: '',
+        email: '',
+        memberId: '',
+        name: '',
+        password: '',
+      },
+
       rules: {
         email: v => /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/.test(v) || '정확한 이메일 형식을 입력해주세요',
         name : v => /^[가-힣a-zA-Z]+$/.test(v) || '이름을 확인해주세요',
@@ -480,7 +493,7 @@ export default {
         number: v =>  /[0-9]/.test(v)  || '숫자가 포함되지 않았습니다',
         small: v =>  /[a-z]/.test(v)  || '한글자 이상 소문자를 입력해주세요',
         space: v =>  !/\s/g.test(v)  || '비밀번호에 공백이 있습니다',
-        match : v => this.newPassword === v || '비밀번호가 일치하지 않습니다'
+        match : v => this.registParam.password === v || '비밀번호가 일치하지 않습니다'
       },
     }
   },
@@ -492,7 +505,7 @@ export default {
       this.matchPass = val === this.confirmNewPassword;
     },
     confirmNewPassword(val) {
-      this.matchPass = val === this.newPassword;
+      this.matchPass = val === this.registParam.password;
     },
     // 확인 msg
     snackbar(val) {
@@ -501,13 +514,43 @@ export default {
       }, 4000)
     },
     nickName(){
-      this.nickNameCheck = false;
+      this.idCheck = false;
     }
   },
   methods: {
+    async registAccount() {
+      if(!this.idCheck){
+        this.snackbarDelay("중복확인을 먼저 진행해주세요");
+        return null;
+      }
+      try {
+        await registerAccount(this.registParam)
+        this.$message.success('등록에 성공하였습니다.')
+        console.log('입력한 멤버 정보 ', this.registParam)
+      } catch (e) {
+        console.log(e)
+        if(e.response.status === 401) {
+          this.loginDialogMsg = "회원가입 오류. 다시한번 회원가입을 진행해주세요"
+          this.registParam.zipCode = ''
+          this.registParam.address1 = ''
+          this.registParam.address2 = ''
+          this.registParam.birthday = ''
+          this.registParam.contact = ''
+          this.registParam.email = ''
+          this.registParam.memberId = ''
+          this.registParam.name = ''
+          this.registParam.password = ''
+          this.confirmNewPassword = ''
+        }
+      } finally {
+        this.e1 = 2
+      }
+    },
+
+
     onCompl(result) {
-      this.address = result.address
-      this.zipCode = result.zonecode
+      this.registParam.address1 = result.address
+      this.registParam.zipCode = result.zonecode
       this.daumPost = false
     },
 
@@ -516,20 +559,24 @@ export default {
     },
     // step 1
     // 중복체크
-    nickCheck(nick){
-      this.$axios.get(' /signup/doublecheck/'+nick)
-          .then(response=>{
-            if(response.data > 0){
-              this.nickNameCheck = false
-              this.snackbarDelay("중복된 아이디가 존재합니다")
-            }else{
-              this.nickNameCheck = true
-              this.snackbarDelay("사용 가능한 아이디입니다")
-            }
-          })
-          .catch(error =>{
-            console.log(error.response);
-          })
+    async idDupCheck(id) {
+      console.log('입력한 id :', id)
+
+      try {
+        const res = await getDupMemberId(id)
+        console.log('res', res)
+        let result = res.data
+
+        if (result == false) {
+          this.idCheck = false
+          this.snackbarDelay("중복된 아이디가 존재합니다.")
+        } else {
+          this.idCheck = true
+          this.snackbarDelay("사용 가능한 아이디입니다.")
+        }
+      } catch (e) {
+        console.log(e)
+      }
     },
     snackbarDelay(str){
       this.snackbarMsg = str;
@@ -558,7 +605,7 @@ export default {
     },
 
     signCommit(){
-      if(!this.nickNameCheck){
+      if(!this.idCheck){
         this.snackbarDelay("중복확인을 먼저 진행해주세요");
         return null;
       }

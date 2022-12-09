@@ -134,10 +134,21 @@
 
             <v-row class="pl-4">
               <v-col>
-                <v-row>
+                <v-row v-if="productInfo.price === productInfo.totalPrice">
                   <v-btn color="rgb(40,40,40)" height="60px" disabled class="price-card d-flex flex-column">
                     <span class="white--text" style="font-size: 14px">판매가: </span>
-                    <span v-html="productInfo.price" class="white--text pl-1" style="font-size: 20px"></span>
+                    <span v-html="productInfo.price" class="white--text pl-1" style="font-size: 20px;"/>
+                    <span class="white--text" style="font-size: 14px;">원</span>
+                  </v-btn>
+                </v-row>
+                <v-row v-else>
+                  <v-btn color="rgb(40,40,40)" height="60px" disabled class="price-card d-flex flex-column">
+                    <span class="white--text" style="font-size: 14px">판매가: </span>
+                    <span v-html="productInfo.price" class="white--text pl-1" style="font-size: 17px; text-decoration:line-through"/>
+                    <span class="white--text" style="font-size: 12px;">원</span>
+                    <span v-html="productInfo.discountRate" class="yellow--text" style="font-size: small"/>
+                    <span class="yellow--text" style="font-size: small">%</span>
+                    <span v-html="productInfo.totalPrice" class="white--text pl-1" style="font-size: 20px"/>
                     <span class="white--text" style="font-size: 14px" >원</span>
                   </v-btn>
                 </v-row>
@@ -592,4 +603,9 @@ export default {
   }
 }
 
+.ratePosition {
+  vertical-align : text-top;
+  font-size: small;
+  float: top;
+}
 </style>
