@@ -230,6 +230,14 @@
                 <v-list-item-title style="color: rgb(190,190,190)">Home</v-list-item-title>
               </v-list-item>
 
+            <v-list-item to="/">
+              <v-list-item-icon>
+                <v-icon color="rgb(190,190,190)" medium>mdi-thumb-up</v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-title style="color: rgb(190,190,190)">Best 50</v-list-item-title>
+            </v-list-item>
+
               <v-list-group
                   :value="false"
                   prepend-icon="mdi-account-circle grey--text"
@@ -240,16 +248,16 @@
 
                 <v-list-item
                     :value="true"
-                    v-for="item in detailTag"
-                    :key="item.main"
-                    v-model="item.active"
+                    v-for="item in categoryData"
+                    :key="item.categoryId"
+                    v-model="item.categoryId"
                     link
                     :to="{
-                      path: `/category/${item.num}`,
+                      path: `/category/${item.categoryId}`,
                     }"
                 >
                   <v-list-item-content>
-                    <v-list-item-title style="color: rgb(190,190,190)" v-text="item.main"></v-list-item-title>
+                    <v-list-item-title style="color: rgb(190,190,190)" v-text="item.categoryName"></v-list-item-title>
                   </v-list-item-content>
 
                 </v-list-item>
@@ -286,6 +294,8 @@
 <script>
 
 
+
+import {getCategoryList} from "@/api/common";
 
 export default {
   name: "SearchMenu",
@@ -328,6 +338,8 @@ export default {
 
       dialog: false,
       dialogMsg : '',
+
+      categoryData: []
    }
   },
   watch: {
@@ -343,7 +355,33 @@ export default {
 
 
   },
+  created() {
+    this.init()
+  },
   methods:{
+    init() {
+      this.getCategory()
+    },
+    async getCategory() {
+      this.categoryData = [
+        { categoryId: '', categoryName: '전체' }
+      ]
+      try {
+        const res = getCategoryList()
+        console.log('res', res)
+        const result = (await res).data.categoryItems
+        result.forEach(aaa => {
+          this.categoryData.push({
+            categoryName: aaa.categoryName,
+            categoryId: aaa.categoryId
+          })
+        })
+        console.log('categoryData', this.categoryData)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
     mainSearch(){
       let str = this.inputMsg
       str = str.trim()                                             //양끝 공백 제거
