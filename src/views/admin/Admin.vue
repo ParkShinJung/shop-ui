@@ -127,13 +127,13 @@ export default {
 
 
           {icon:'mdi-credit-card', name:'Order', link:'/admin/order',  show:true},
-          {icon:'mdi-book', name:'Comment', link:'/admin/comment', show:true},
+          {icon:'mdi-product', name:'Comment', link:'/admin/comment', show:true},
           {icon:'mdi-account-box', name:'member', link:'/admin/member',  show:true},
         ],
 
         links2:[
-          {icon:'mdi-book-open-variant', name:'postBook', link:'/admin/postBook',  show:true},
-          {icon:'mdi-book-open-variant', name:'editBook', link:'/admin/editBook',  show:true},
+          {icon:'mdi-product-open-variant', name:'postBook', link:'/admin/postBook',  show:true},
+          {icon:'mdi-product-open-variant', name:'editBook', link:'/admin/editBook',  show:true},
         ],
 
         drawer: true,

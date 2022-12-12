@@ -2,7 +2,7 @@
   <v-row class="justify-center">
     <v-col cols="12" class="mb-8 pa-0">
       <v-row class="ml-2">
-        <h2 class="grey--text mb-1">비슷한 키워드의 책</h2>
+        <h2 class="grey--text mb-1">비슷한 키워드의 제품</h2>
         <v-btn fab width="33"
                height="33"
                color="rgb(80,80,80)"
@@ -19,7 +19,7 @@
     </v-col>
 
     <v-col cols="12" class="pa-0   justify-center d-flex flex-column" >
-      <h2 v-show="noBookData" class="mt-8 grey--text text--darken-2 pl-1">비슷한 책을 준비중이에요...</h2>
+      <h2 v-show="noBookData" class="mt-8 grey--text text--darken-2 pl-1">비슷한 제품을 준비중이에요...</h2>
     </v-col>
 
     <v-col cols="12" class="pa-0 justify-center align-start d-flex">
