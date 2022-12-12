@@ -457,14 +457,8 @@ export default {
     },
 
     Logout(){
-      this.$axios.post("/logout")
-        .then(() => {
-              this.$store.dispatch('logout').then(()=> {
-                this.dialogMsg = "로그아웃 성공. 로그인 페이지로 이동합니다"
-                this.dialog = true
-              })
-        }).catch(error =>{
-              console.log("error : " + error.response);
+      this.$store.dispatch('logout').then(() => {
+        location.reload()
         })
     },
     LogoutDialog(){
