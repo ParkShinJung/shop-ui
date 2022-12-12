@@ -1,5 +1,7 @@
 // import axios from "axios";
 
+import cookie from "@/utils/cookie";
+
 const userData = () => {
     return {
         mid : void 0,
@@ -41,6 +43,12 @@ const member = {
 
             console.log("loginData : " + state.loginData)
             console.log("putUserInfo : " + state.userData)
+
+
+            cookie.setCookie('memberId', data.memberId)
+            cookie.setCookie('memberName', data.name)
+            cookie.setCookie('accountType', data.accountType)
+            cookie.setCookie('email', data.email)
         },
 
         isLoading : function(state, data){
@@ -87,7 +95,12 @@ const member = {
                     commit('initData')
                     resolve()
                 }, 500)
+                cookie.removeCookie('memberId')
+                cookie.removeCookie('memberName')
+                cookie.removeCookie('accountType')
+                cookie.removeCookie('email')
             }).then(()=> console.log("success logout :: member Store"))
+
         },
 
         updateProfile: function ({commit}, payload) {
