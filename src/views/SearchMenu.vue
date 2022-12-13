@@ -283,6 +283,14 @@
               </v-list-item>
 
               <v-divider class="ma-6 white" />
+
+            <v-list-item to="/">
+              <v-list-item-icon>
+                <v-icon color="rgb(190,190,190)" medium>mdi-briefcase-plus</v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-title style="color: rgb(190,190,190)">Add Product</v-list-item-title>
+            </v-list-item>
           </v-list>
         </div>
       </v-navigation-drawer>
