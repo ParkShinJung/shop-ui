@@ -205,6 +205,7 @@
 </template>
 
 <script>
+import { registerProductReview } from '@/api/product'
 export default {
   name: "CommentComponent",
   props : ["selectBid"],
@@ -241,6 +242,15 @@ export default {
       ],
       totalRating: 0,
       totalCount : 0,
+
+      registParam: {
+        content: '',
+        image: '',
+        memberId: '',
+        productId: '',
+        starRating: 0,
+        title: '',
+      }
     }
   },
   watch: {
@@ -279,6 +289,14 @@ export default {
       .catch(error =>{
         console.log(error.response);
       })
+    },
+
+    async registerReview() {
+      try {
+        await registerProductReview(this.registParam)
+      } catch (e) {
+        console.log(e)
+      }
     },
 
     postComment(){

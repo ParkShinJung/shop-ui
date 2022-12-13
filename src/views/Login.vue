@@ -12,15 +12,15 @@
             <div class="pa-3 pb-5">
               <v-text-field
                   outlined
-                  placeholder="email"
-                  v-model="email"
+                  placeholder="id"
+                  v-model="loginForm.userId"
                   required dark>
               </v-text-field>
               <v-text-field
                   outlined hide-details
                   placeholder="password"
                   type="password"
-                  v-model="password"
+                  v-model="loginForm.password"
                   required dark>
               </v-text-field>
             </div>
@@ -69,21 +69,55 @@
 </template>
 
 <script>
+import { logInCheck } from "@/api/account"
+
 export default {
   name: "Login.vue",
   data () {
     return {
       email: '',
       password: '',
+      id: '',
 
       dialog:false,
       dialogMsg:'',
+
+      loginForm: {
+        userId: '',
+        password: ''
+      },
+      accountInfo: {}
     }
   },
   methods: {
-    loginSubmit() {
-      if(this.email&&this.password){
-        let saveData = {};
+    async loginSubmit() {
+
+      if(this.loginForm.userId&&this.loginForm.password){
+
+        try {
+          const res = await logInCheck(this.loginForm.userId, this.loginForm)
+          this.accountInfo = res.data
+          console.log('로그인한 계정의 정보 ', this.accountInfo)
+          if (!this.accountInfo.accountIdMatched || !this.accountInfo.accountPasswordMatched) {
+            alert("인증오류. 아이디와 비밀번호를 확인해주세요");
+            return
+          }
+          if (!this.accountInfo.adminAccess) {
+            alert("권한이 없습니다.");
+            return
+          }
+
+          this.$store.dispatch('login',this.accountInfo)
+              .then(()=>{
+                this.dialogMsg="로그인 성공."
+                this.dialog=true
+              })
+        } catch (e) {
+          console.error(e)
+          alert("인증오류. 아이디와 비밀번호를 확인해주세요");
+          this.loginForm.userId = null; this.loginForm.password = null;
+        }
+/*        let saveData = {};
         saveData.email = this.email;
         saveData.password = this.password;
         try {
@@ -111,14 +145,18 @@ export default {
               })
         } catch (error) {
           console.error(error);
-        }
+        }*/
       }else{
         alert("아이디 혹은 비밀번호가 입력되지 않았습니다")
+        return false
       }
     },
     signLink(){
       this.$router.push({path:'/signup'})
     },
+    dialogOff() {
+      this.dialog = false
+    }
   },
 }
 </script>

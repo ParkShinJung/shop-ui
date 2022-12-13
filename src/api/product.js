@@ -30,3 +30,14 @@ export function getProductListByCategoryId(categoryId) {
     }
     return request.get(url, config)
 }
+
+export function registerProductReview(params) {
+    const url = '/product/review'
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+    return request.post(url, params, config)
+}
+

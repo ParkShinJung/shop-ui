@@ -144,7 +144,7 @@
                     v-show="profileImg !== void 0"
                     alt="">
               </v-avatar>
-              <h3 class="grey--text text--lighten-2 mt-3">{{ $store.state.member.userData.nickName }}</h3>
+              <h3 class="grey--text text--lighten-2 mt-3">{{ $store.state.member.userData.name }}</h3>
               <p class="text-caption mt-1 grey--text text--lighten-2">
                 {{ $store.state.member.loginData.email }}
               </p>
@@ -283,6 +283,14 @@
               </v-list-item>
 
               <v-divider class="ma-6 white" />
+
+            <v-list-item to="/">
+              <v-list-item-icon>
+                <v-icon color="rgb(190,190,190)" medium>mdi-briefcase-plus</v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-title style="color: rgb(190,190,190)">Add Product</v-list-item-title>
+            </v-list-item>
           </v-list>
         </div>
       </v-navigation-drawer>
@@ -325,7 +333,7 @@ export default {
       links: [
         {icon:'mdi-cart', name:'Cart', link:'/my/cart',  show:true},
         {icon:'mdi-library', name:'Wish List', link:'/my/wish', show:true},
-        {icon:'mdi-product', name:'Comment', link:'/my/comment', show:true},
+        {icon:'mdi-comment-text', name:'Comment', link:'/my/comment', show:true},
         {icon:'mdi-credit-card', name:'Order', link:'/my/order',  show:true},
         {icon:'mdi-account-box', name:'infoEdit', link:'/my/infoEdit',  show:true},
       ],
