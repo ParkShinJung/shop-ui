@@ -44,7 +44,7 @@ export const routes = [
             {
                 path: 'register',
                 name : 'register',
-                component: () => import(/* webpackChunkName: "about" */ '../views/admin/editBook/RegisterProduct.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '../views/admin/editProduct/RegisterProduct.vue'),
                 props: true,
             },
 
@@ -154,11 +154,11 @@ export const routes = [
 
             {
                 path: 'postBook',
-                component: () =>  import('@/views/admin/editBook/PostBook')
+                component: () =>  import('@/views/admin/editProduct/RegistProduct')
             },
             {
-                path: 'editBook',
-                component: () =>  import('@/views/admin/editBook/EditBook')
+                path: 'editProduct',
+                component: () =>  import('@/views/admin/editProduct/EditProduct')
             },
         ]
     },
