@@ -147,12 +147,13 @@
               <h3 class="grey--text text--lighten-2 mt-3">{{ $store.state.member.userData.name }}</h3>
               <p class="text-caption mt-1 grey--text text--lighten-2">
                 {{ $store.state.member.loginData.email }}
+                {{ $store.state.member.userData.accountType }}
               </p>
-              <v-btn v-show="$store.state.member.userData.userRule==='admin'"
+              <v-btn v-show="$store.state.member.userData.accountType === 'ADMIN'"
                      rounded small color="grey lighten-2" class="mb-1"
                      @click="$router.push({path:'/admin/order'})"
               >
-                <v-avatar color="red darken-4" class="mr-1" size="8"/>{{ $store.state.member.userData.userRule }}
+                <v-avatar color="red darken-4" class="mr-1" size="8"/>관리자페이지
               </v-btn>
 
 
@@ -205,7 +206,7 @@
       </v-dialog>
     </v-app-bar>
 
-    <v-form>
+<!--    <v-form>
       <v-navigation-drawer
           color="rgb(40,40,40)"
           class="index-nav"
@@ -240,7 +241,7 @@
 
               <v-list-group
                   :value="false"
-                  prepend-icon="mdi-account-circle grey--text"
+                  prepend-icon="mdi-account-circle grey&#45;&#45;text"
               >
                 <template v-slot:activator >
                   <v-list-item-title style="color: rgb(190,190,190)">Category</v-list-item-title>
@@ -284,7 +285,10 @@
 
               <v-divider class="ma-6 white" />
 
-            <v-list-item to="/">
+            <span>
+
+            </span>
+            <v-list-item to="/register">
               <v-list-item-icon>
                 <v-icon color="rgb(190,190,190)" medium>mdi-briefcase-plus</v-icon>
               </v-list-item-icon>
@@ -294,7 +298,7 @@
           </v-list>
         </div>
       </v-navigation-drawer>
-    </v-form>
+    </v-form>-->
   </v-form>
 
 </template>
@@ -304,6 +308,7 @@
 
 
 import {getCategoryList} from "@/api/common";
+import cookie from "@/utils/cookie";
 
 export default {
   name: "SearchMenu",
@@ -314,6 +319,8 @@ export default {
       inputMsg : '',
       autoSearchList : false,
       mini : true,
+
+      memberType: cookie.getCookie('accountType'),
 
       selectList:0,
       componentKey:0,
@@ -360,8 +367,9 @@ export default {
     profileImg(val){
       console.log(val)
     },
-
-
+    memberType() {
+      console.log('memberType', this.memberType)
+    }
   },
   created() {
     this.init()

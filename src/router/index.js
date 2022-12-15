@@ -8,12 +8,12 @@ Vue.use(VueRouter)
 
 export const routes = [
     {
-        path: '',
+        path: '/',
         // component: Layout,
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/index2'),
+        component: () => import(/* webpackChunkName: "about" */ '../views/index'),
         children: [
             // *****
             // Book
@@ -24,21 +24,27 @@ export const routes = [
                 props: true,
             },
             {
-                path: '/search',
+                path: 'search',
                 name : 'search',
                 component: () => import(/* webpackChunkName: "about" */ '../views/product/main/search.vue'),
                 props: true,
             },
             {
-                path: '/dashBoard',
+                path: 'dashBoard',
                 name : 'dashBoard',
                 component: () => import(/* webpackChunkName: "about" */ '../views/product/main/Dashboard.vue'),
                 props: true,
             },
             {
-                path: '/category/:categoryId',
+                path: 'category/:categoryId',
                 name : 'category',
                 component: () => import(/* webpackChunkName: "about" */ '@/views/product/main/category.vue'),
+                props: true,
+            },
+            {
+                path: 'register',
+                name : 'register',
+                component: () => import(/* webpackChunkName: "about" */ '../views/admin/editBook/RegisterProduct.vue'),
                 props: true,
             },
 
@@ -126,32 +132,32 @@ export const routes = [
     {
         path: '/admin',
         name: 'Admin',
-        component: () =>  import('@/views/admin/Admin'),
+        component: () =>  import('@/views/admin/AdminTest'),
         children: [
             {
-                path: '/order',
+                path: 'order',
                 component: () => import(/* webpackChunkName: "about" */ '../views/admin/management/AdminOrder'),
             },
             {
-                path: '/order/:orderId',
+                path: 'order/:orderId',
                 component: () =>  import('@/views/admin/management/AdminOrderDetail'),
             },
             {
-                path: '/comment',
+                path: 'comment',
                 component: () => import(/* webpackChunkName: "about" */ '../views/admin/management/AdminComment'),
             },
 
             {
-                path: '/member',
+                path: 'member',
                 component: () => import(/* webpackChunkName: "about" */ '../views/admin/management/AdminMember'),
             },
 
             {
-                path: '/postBook',
+                path: 'postBook',
                 component: () =>  import('@/views/admin/editBook/PostBook')
             },
             {
-                path: '/editBook',
+                path: 'editBook',
                 component: () =>  import('@/views/admin/editBook/EditBook')
             },
         ]
