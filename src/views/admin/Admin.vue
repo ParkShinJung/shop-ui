@@ -133,7 +133,7 @@ export default {
 
         links2:[
           {icon:'mdi-product-open-variant', name:'postBook', link:'/admin/postBook',  show:true},
-          {icon:'mdi-product-open-variant', name:'editBook', link:'/admin/editBook',  show:true},
+          {icon:'mdi-product-open-variant', name:'editProduct', link:'/admin/editProduct',  show:true},
         ],
 
         drawer: true,

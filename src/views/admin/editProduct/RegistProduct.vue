@@ -4,7 +4,7 @@
 
         <v-row class="pa-0">
           <v-card-title>
-            <h3 style="color: rgb(200,200,200)">도서 등록</h3>
+            <h3 style="color: rgb(200,200,200)">제품 등록</h3>
           </v-card-title>
         </v-row>
 
@@ -15,7 +15,7 @@
         <v-row>
           <v-card class="name_card" elevation="0" style="border-radius: 0; border: 1.5px gray solid ; border-collapse: collapse" color="#EEEEEE">
             <v-card-title>
-              도서 이름
+              제품 명
             </v-card-title>
           </v-card>
           <v-card class="input_card" elevation="0" style="border-radius: 0; border-top : 1.5px gray solid; border-right: 1.5px gray solid; border-bottom: 1.5px gray solid;">
@@ -47,7 +47,7 @@
         <v-row>
           <v-card class="name_card" elevation="0"  style="border-radius: 0; border-left: 1.5px gray solid; border-right: 1.5px gray solid;"  color="#EEEEEE">
             <v-card-title>
-              출판 정보
+              제품 정보
             </v-card-title>
           </v-card>
           <v-card class="input_card" elevation="0" style="border-radius: 0; border-right: 1.5px gray solid;" >
@@ -127,7 +127,7 @@
         <v-row>
           <v-card class="name_card" elevation="0"  style=" border-radius: 0; border: 1.5px gray solid;" color="#EEEEEE">
             <v-card-title>
-              도서 정보
+              제품 정보
             </v-card-title>
           </v-card>
 
@@ -192,7 +192,7 @@
         <v-row>
           <v-card class="name_card" elevation="0" style="border-radius: 0; border-left: 1.5px gray solid; border-right: 1.5px gray solid;"  color="#EEEEEE" >
             <v-card-title>
-              도서 소개
+              제품 소개
             </v-card-title>
           </v-card>
 
@@ -242,7 +242,7 @@
         <v-row>
           <v-card class="name_card" elevation="0" style="border-radius: 0; border: 1.5px gray solid;" color="#EEEEEE">
             <v-card-title>
-              도서 태그
+              제품 태그
             </v-card-title>
           </v-card>
 

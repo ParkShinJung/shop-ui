@@ -3,7 +3,7 @@
     <v-col>
       <v-card dark class="pa-4">
         <v-card-title>
-          <h3>도서 관리</h3>
+          <h3>제품 관리</h3>
           <v-spacer></v-spacer>
           <v-text-field
               v-model="search"
@@ -46,16 +46,16 @@ export default {
       search:'',
       headers: [
         {
-          text: '도서번호',
+          text: '제품번호',
           align: 'start',
           sortable: false,
           value: 'bid',
           width:'80'
         },
-        { text: '도서제목', value: 'bookTitle', width:'400' },
+        { text: '제품명', value: 'bookTitle', width:'400' },
         { text: '작가', value: 'bookAuthor', width:'200' },
         { text: '출판사', value: 'bookPublisher', width:'100' , align: 'center', },
-        { text: '출판일', value: 'bookPublishedDate', width:'100', align: 'center', },
+        { text: '등록일', value: 'bookPublishedDate', width:'100', align: 'center', },
         { text: 'ISBN', value: 'bookIsbn', width:'150', align: 'center', },
         { text: '상태', value: 'isDel', width:'70', sortable: false,  align: 'center',},
       ],
