@@ -10,6 +10,7 @@ const userData = () => {
         phoneNum: void 0,
         profilePicture : void 0,
         userRule : void 0,
+        accountType: void 0,
     }
 }
 
@@ -18,6 +19,7 @@ const loginData = () => {
         loginState: false,
         email: void 0,
         token: void 0,
+        accountType: void 0,
     }
 }
 
@@ -30,6 +32,7 @@ const member = {
 
     mutations: {
         putUserInfo: function (state, data){
+
             state.loginData.email = data.email
             state.loginData.token = data.token
             state.loginData.loginState = true
@@ -40,9 +43,11 @@ const member = {
             state.userData.phoneNum = data.phoneNum
             state.userData.userRule = data.userRule
             state.userData.name = data.name
+            state.userData.accountType = data.accountType
 
-            console.log("loginData : " + state.loginData)
-            console.log("putUserInfo : " + state.userData)
+
+            console.log("state : " + state.userData.accountType)
+            console.log("data : " + data.accountType)
 
 
             cookie.setCookie('memberId', data.memberId)
@@ -64,7 +69,7 @@ const member = {
         initData: function (state){
             state.userData = userData();
             state.loginData = loginData();
-            console.log(state)
+            console.log('store-state', state)
         },
 
         putProfile: function (state, data){
@@ -91,6 +96,10 @@ const member = {
 
         logout({commit}){
             return new Promise((resolve) => {
+                commit('initData', [])
+                commit('putUserInfo', [])
+                commit('SET_ROLES', [])
+
                 setTimeout(() => {
                     commit('initData')
                     resolve()
@@ -100,6 +109,9 @@ const member = {
                 cookie.removeCookie('accountType')
                 cookie.removeCookie('email')
             }).then(()=> console.log("success logout :: member Store"))
+
+
+
 
         },
 
