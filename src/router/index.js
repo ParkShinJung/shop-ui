@@ -41,12 +41,12 @@ export const routes = [
                 component: () => import(/* webpackChunkName: "about" */ '@/views/product/main/category.vue'),
                 props: true,
             },
-            {
-                path: 'register',
-                name : 'register',
-                component: () => import(/* webpackChunkName: "about" */ '../views/admin/editProduct/RegisterProduct.vue'),
-                props: true,
-            },
+            // {
+            //     path: 'register',
+            //     name : 'register',
+            //     component: () => import(/* webpackChunkName: "about" */ '../views/admin/editProduct/RegisterProduct.vue'),
+            //     props: true,
+            // },
 
             {
                 path: '/my',

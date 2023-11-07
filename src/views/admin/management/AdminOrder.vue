@@ -49,11 +49,22 @@
 </template>
 
 <script>
+
+import { getOrderList } from '@/api/order'
+
 export default {
   name: "AdminOrder",
   data: () => ({
     orderData: [],
     search:'',
+
+    searchQuery: {
+      isPaging: 'Y',
+      page: 1,
+      pageSize: 10,
+      keyword: '',
+    },
+    orderList: [],
 
     dialog:false,
     cancelId:null,
@@ -74,7 +85,24 @@ export default {
       { text: '결제취소', value: 'cancel', width:'90', sortable: false,  align: 'center',},
     ],
   }),
+  created() {
+    this.init()
+  },
   methods: {
+    init() {
+      this.getOrderList()
+      this.getOrdersByAdmin()
+    },
+    async getOrderList() {
+      try {
+        const res = await getOrderList(this.searchQuery)
+        this.orderList = res.data.ordersItemsList
+        console.log('orderList -->', this.orderList)
+      } catch (e) {
+        console.error(e)
+      }
+
+    },
     getOrdersByAdmin() {
       this.$axios.get("admin/order")
           .then(response => {
@@ -98,9 +126,9 @@ export default {
       else return 'green darken-4'
     },
   },
-  mounted() {
+/*  mounted() {
     this.getOrdersByAdmin();
-  }
+  }*/
 }
 </script>
 
