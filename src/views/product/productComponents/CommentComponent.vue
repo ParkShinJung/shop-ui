@@ -60,7 +60,7 @@
           <v-col cols="12" md="11" class="mt-10 mb-16 pb-12">
 
             <div class=" align-center flex-column d-flex mb-4">
-              <span class="pb-3" style="font-size: 18px; font-weight: bold; color: rgb(180,180,180);">이 책에 대한 리뷰를 남겨주세요!</span>
+              <span class="pb-3" style="font-size: 18px; font-weight: bold; color: rgb(180,180,180);">이 제품에 대한 리뷰를 남겨주세요!</span>
               <v-rating
                 v-model="writeRating"
                 color="yellow darken-2"
@@ -205,6 +205,7 @@
 </template>
 
 <script>
+import { registerProductReview } from '@/api/product'
 export default {
   name: "CommentComponent",
   props : ["selectBid"],
@@ -241,6 +242,15 @@ export default {
       ],
       totalRating: 0,
       totalCount : 0,
+
+      registParam: {
+        content: '',
+        image: '',
+        memberId: '',
+        productId: '',
+        starRating: 0,
+        title: '',
+      }
     }
   },
   watch: {
@@ -279,6 +289,14 @@ export default {
       .catch(error =>{
         console.log(error.response);
       })
+    },
+
+    async registerReview() {
+      try {
+        await registerProductReview(this.registParam)
+      } catch (e) {
+        console.log(e)
+      }
     },
 
     postComment(){

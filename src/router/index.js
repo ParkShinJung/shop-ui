@@ -6,10 +6,10 @@ import {store} from "@/store";
 
 Vue.use(VueRouter)
 
-const routes = [
-
+export const routes = [
     {
         path: '/',
+        // component: Layout,
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -18,21 +18,33 @@ const routes = [
             // *****
             // Book
             {
-                path: '',
+                path: '/',
                 name: 'About',
-                component: () => import(/* webpackChunkName: "about" */ '../views/book/main/About.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '../views/product/main/About.vue'),
                 props: true,
             },
             {
                 path: 'search',
                 name : 'search',
-                component: () => import(/* webpackChunkName: "about" */ '../views/book/main/search.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '../views/product/main/search.vue'),
                 props: true,
             },
             {
-                path: 'category/:category',
+                path: 'dashBoard',
+                name : 'dashBoard',
+                component: () => import(/* webpackChunkName: "about" */ '../views/product/main/Dashboard.vue'),
+                props: true,
+            },
+            {
+                path: 'category/:categoryId',
                 name : 'category',
-                component: () => import(/* webpackChunkName: "about" */ '../views/book/main/category.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '@/views/product/main/category.vue'),
+                props: true,
+            },
+            {
+                path: 'register',
+                name : 'register',
+                component: () => import(/* webpackChunkName: "about" */ '../views/admin/editProduct/RegisterProduct.vue'),
                 props: true,
             },
 
@@ -44,18 +56,18 @@ const routes = [
                 },
                 children:[
                     {
-                        path: 'wish',
+                        path: '/wish',
                         name: 'WishList',
                         component: () =>  import('@/views/mypage/WishList'),
                     },
                     {
-                        path: 'comment',
+                        path: '/comment',
                         name: 'MyComment',
                         component: () =>  import('@/views/mypage/MyComment')
                     },
 
                     {
-                        path: 'cart',
+                        path: '/cart',
                         name: 'Cart',
                         component: () =>  import('@/views/mypage/Cart'),
                     },
@@ -66,12 +78,12 @@ const routes = [
                         component: () =>  import('@/views/mypage/Order'),
                     },
                     {
-                        path: 'order/:orderId',
+                        path: '/order/:orderId',
                         name: 'orderDetail',
                         component: () =>  import('@/views/mypage/OrderDetail'),
                     },
                     {
-                        path: 'infoEdit',
+                        path: '/infoEdit',
                         name: 'InfoEdit',
                         component: () =>  import('@/views/mypage/InfoEdit')
                     },
@@ -97,12 +109,12 @@ const routes = [
     {
         path: '/mainBook',
         name: 'MainBook',
-        component: () =>  import('@/views/book/MainBook')
+        component: () =>  import('@/views/product/MainBook')
     },
     {
-        path: '/detailView',
+        path: '/detailView/:productId',
         name: 'DetailView',
-        component: () =>  import('@/views/book/DetailView')
+        component: () =>  import('@/views/product/DetailView')
     },
     {
         path: '/order',
@@ -120,7 +132,7 @@ const routes = [
     {
         path: '/admin',
         name: 'Admin',
-        component: () =>  import('@/views/admin/Admin'),
+        component: () =>  import('@/views/admin/AdminTest'),
         children: [
             {
                 path: 'order',
@@ -142,11 +154,11 @@ const routes = [
 
             {
                 path: 'postBook',
-                component: () =>  import('@/views/admin/editBook/PostBook')
+                component: () =>  import('@/views/admin/editProduct/RegistProduct')
             },
             {
-                path: 'editBook',
-                component: () =>  import('@/views/admin/editBook/EditBook')
+                path: 'editProduct',
+                component: () =>  import('@/views/admin/editProduct/EditProduct')
             },
         ]
     },

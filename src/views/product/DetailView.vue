@@ -11,7 +11,7 @@
 
 <script>
 
-import BookDetailComponent from "@/views/book/bookComponents/BookDetail";
+import BookDetailComponent from "@/views/product/productComponents/ProductDetail";
 export default {
   name: "DetailView",
   components: {BookDetailComponent},

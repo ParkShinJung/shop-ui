@@ -1,15 +1,18 @@
 <template>
 <v-app style="background-color: rgb(25,25,25); min-height: 100vh">
+
   <SearchMenu
       @searchData="searchByMenu"
       :key="searchComponentKey"
-  ></SearchMenu>
+  >
+  </SearchMenu>
 
- <main>
-   <v-container fluid class="pa-0">
+<!-- <div style="margin-top: 224px; width: 100%">
+   <v-container class="pa-0">
      <router-view></router-view>
    </v-container>
- </main>
+ </div>-->
+  <router-view style="margin-top: 224px;"></router-view>
 
   <v-footer
       dark app

@@ -1,8 +1,8 @@
 <template>
   <v-container fluid class="pa-0">
-    <v-row class="ma-0 align-center" style="background-color: rgb(20,20,20); height: 100vh">
+    <v-row class="ma-0 align-center" style="background-color: rgb(20,20,20); height: 100%">
       <v-col class="pa-0 justify-center d-flex">
-        <v-card rounded flat width="650px" color="rgb(40,40,40)">
+        <v-card rounded flat width="650px" style="margin-top: 60px" color="rgb(40,40,40)">
           <div style="height: 24px; background-color: rgb(30,30,30)" class="align-center justify-end d-flex">
             <v-btn width="14px" elevation="0" height="14px" color="yellow darken-2 mr-2" fab></v-btn>
             <v-btn width="14px" elevation="0" height="14px" color="red darken-2 mr-2" fab></v-btn>
@@ -31,9 +31,9 @@
 
               <v-divider></v-divider>
 
-              <v-stepper-step color="teal accent-5" step="3">
-                프로필 등록
-              </v-stepper-step>
+<!--              <v-stepper-step color="teal accent-5" step="3">-->
+<!--                프로필 등록-->
+<!--              </v-stepper-step>-->
             </v-stepper-header>
 
             <v-stepper-items>
@@ -45,7 +45,7 @@
                       class="pt-4"
                   >
                     <v-text-field
-                        v-model="email"
+                        v-model="registParam.email"
                         :rules="[rules.email]"
                         filled outlined
                         label="이메일 주소" class="pa-2"
@@ -55,7 +55,7 @@
                     <v-row class="ma-0">
                       <v-col cols="6" class="pa-0">
                         <v-text-field
-                            v-model="fullName"
+                            v-model="registParam.name"
                             :rules="[rules.name, rules.length]"
                             filled outlined class="pa-2"
                             label="이름"
@@ -65,14 +65,14 @@
                         <v-text-field
                             filled outlined
                             :rules="[rules.length]"
-                            label="닉네임" class="pa-2"
-                            v-model="nickName"
+                            label="아이디" class="pa-2"
+                            v-model="registParam.memberId"
                         >
                           <template v-slot:prepend-inner>
-                            <v-icon size="25" class="pr-2" :color=" nickNameCheck ? 'blue lighten-2' : 'red lighten-2'">mdi-check</v-icon>
+                            <v-icon size="25" class="pr-2" :color=" idCheck ? 'blue lighten-2' : 'red lighten-2'">mdi-check</v-icon>
                           </template>
                           <template v-slot:append>
-                            <v-btn color="teal accent-6" style="font-weight: bold; bottom: 6px" class="ml-1" @click="nickCheck(nickName)">
+                            <v-btn color="teal accent-6" style="font-weight: bold; bottom: 6px" class="ml-1" @click="idDupCheck(registParam.memberId)">
                               중복확인
                             </v-btn>
                           </template>
@@ -82,10 +82,10 @@
                     </v-row>
 
                     <v-text-field
-                        v-model="phoneNum"
+                        v-model="registParam.contact"
                         :rules="[rules.phone]"
                         filled outlined class="pa-2"
-                        @input="replaceNum(phoneNum)"
+                        @input="replaceNum(registParam.contact)"
                         label="연락처"
                     >
                     </v-text-field>
@@ -98,13 +98,13 @@
                         persistent-hint
                         :rules="[rules.passLength,rules.space,rules.small,rules.number]"
                         label="비밀번호"
-                        v-model="newPassword"
-                        @keyup="passwordRules(newPassword) "
-                        @focus="passwordRules(newPassword) "
+                        v-model="registParam.password"
+                        @keyup="passwordRules(registParam.password) "
+                        @focus="passwordRules(registParam.password) "
                     >
                       <template v-slot:append>
-                        <v-icon v-if="(smallPass&&minPass&&numPass&&spacePass)&&newPassword.length>0" class="blue--text text--lighten-2">mdi-check</v-icon>
-                        <v-icon v-if="!(smallPass&&minPass&&numPass&&spacePass)&&newPassword.length>0" class="red--text text--lighten-2">mdi-alert</v-icon>
+                        <v-icon v-if="(smallPass&&minPass&&numPass&&spacePass)&&registParam.password.length>0" class="blue--text text--lighten-2">mdi-check</v-icon>
+                        <v-icon v-if="!(smallPass&&minPass&&numPass&&spacePass)&&registParam.password.length>0" class="red--text text--lighten-2">mdi-alert</v-icon>
                       </template>
                       <template v-slot:message>
                         <span :class="numPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-1'"  class="security-text"> 숫자와 </span>
@@ -132,6 +132,78 @@
                         <span v-if="!matchPass" class="red--text text--lighten-1" >비밀번호가 일치하지 않습니다.</span>
                       </template>
                     </v-text-field>
+
+                    <v-row class="ma-0">
+                      <v-col cols="8" class="pa-0">
+                        <v-text-field
+                            v-model="registParam.zipCode"
+                            :rules="[rules.address, rules.length]"
+                            filled outlined class="pa-2"
+                            disabled
+                            label="우편번호"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="4"  class="pa-0">
+                          <template>
+                            <v-btn color="teal accent-6" style="font-weight: bold; top: 17px" class="ml-1" @click="daumPost = !daumPost">
+                              우편번호찾기
+                            </v-btn>
+                          </template>
+                        <section v-if="daumPost" class="daum">
+                          <div class="dim" @click="daumPost = !daumPost" />
+                          <vue-daum-postcode @complete="onCompl"/>
+                        </section>
+                      </v-col>
+
+                    </v-row>
+
+                    <v-text-field
+                        v-model="registParam.address1"
+                        :rules="[rules.address, rules.length]"
+                        filled outlined class="pa-2"
+                        disabled
+                        label="주소"
+                    ></v-text-field>
+
+                    <v-text-field
+                        v-model="registParam.address2"
+                        filled outlined class="pa-2"
+                        label="상세주소"
+                    ></v-text-field>
+
+                    <div>
+                      <v-menu
+                          ref="menu"
+                          v-model="menu"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                              v-model="registParam.birthday"
+                              label="생년월일"
+                              prepend-icon="mdi-calendar"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                            v-model="registParam.birthday"
+                            placehol
+                            :active-picker.sync="activePicker"
+                            :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
+                            min="1950-01-01"
+                            @change="save"
+                        ></v-date-picker>
+                      </v-menu>
+                    </div>
+
+
+
+
                     <v-checkbox
                         class="pl-3"
                         v-model="agreement"
@@ -147,12 +219,21 @@
                   </v-form>
                 </v-card>
 
-                <v-card-actions class="pa-4" style="background-color: rgb(40,40,40)">
+                <v-card class="pa-4" style="background-color: rgb(40,40,40)">
                   <v-btn
                       text
                       @click="$router.push({path:'/login'})"
                   >
                     cancel
+                  </v-btn>
+                  <v-btn
+                      :loading="isLoading"
+                      class="white--text" rounded
+                      color="teal accent-5"
+                      style="float: right"
+                      depressed @click="registAccount"
+                  >
+                    sign-up
                   </v-btn>
                   <v-spacer></v-spacer>
                   <v-btn
@@ -160,11 +241,11 @@
                       :loading="isLoading"
                       class="white--text" rounded
                       color="teal accent-5"
-                      depressed @click="signCommit"
+                      depressed @click="registAccount"
                   >
                     sign-up
                   </v-btn>
-                </v-card-actions>
+                </v-card>
               </v-stepper-content>
 
 
@@ -252,8 +333,8 @@
         v-model="snackbar"
     >
       <div class="align-center d-flex">
-        <v-icon size="30" class="pr-2" :color=" nickNameCheck ? 'blue' : 'red'"
-        >{{ nickNameCheck ? 'mdi-checkbox-marked-circle' : 'mdi-alert-circle' }}</v-icon>
+        <v-icon size="30" class="pr-2" :color=" idCheck ? 'blue' : 'red'"
+        >{{ idCheck ? 'mdi-checkbox-marked-circle' : 'mdi-alert-circle' }}</v-icon>
         <span class="black--text">{{snackbarMsg}}</span>
       </div>
     </v-snackbar>
@@ -334,6 +415,7 @@
 
 <script>
 import axios from "axios";
+import { registerAccount, getDupMemberId } from "@/api/account"
 
 export default {
   name: "SignUp.vue",
@@ -361,25 +443,48 @@ export default {
       spacePass: false,
 
       //중복확인
-      nickNameCheck : false,
+      idCheck : false,
       snackbar : false,
       snackbarMsg : '',
 
       fullName : undefined,
       nickName : undefined,
+      zipCode: '',
+      address: '',
+      address2: '',
       agreement: false,
       email: undefined,
       form: false,
       isLoading: false,
       phoneNum: undefined,
 
+      daumPost: false,
+
+      activePicker: null,
+      date: null,
+      menu: false,
+
       // step 2
       imageUrl: undefined,
       imgFile:[],
 
+      registParam: {
+        accountType: 'USER',
+        zipCode: '',
+        address1: '',
+        address2: '',
+        birthday: '',
+        contact: '',
+        email: '',
+        memberId: '',
+        name: '',
+        password: '',
+      },
+
       rules: {
         email: v => /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/.test(v) || '정확한 이메일 형식을 입력해주세요',
         name : v => /^[가-힣a-zA-Z]+$/.test(v) || '이름을 확인해주세요',
+        address : v => /^[가-힣a-zA-Z]+$/.test(v) || '주소를 확인해주세요',
         length : v=> (v||'').length >1 || '길이는 최소 2글자 이상입니다',
         phone : v => /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/.test(v) || '올바른 전화번호 형식을 입력해주세요',
         required: v => !!v || '개인정보 수집 및 이용안내 동의해 주세요',
@@ -388,16 +493,19 @@ export default {
         number: v =>  /[0-9]/.test(v)  || '숫자가 포함되지 않았습니다',
         small: v =>  /[a-z]/.test(v)  || '한글자 이상 소문자를 입력해주세요',
         space: v =>  !/\s/g.test(v)  || '비밀번호에 공백이 있습니다',
-        match : v => this.newPassword === v || '비밀번호가 일치하지 않습니다'
+        match : v => this.registParam.password === v || '비밀번호가 일치하지 않습니다'
       },
     }
   },
   watch: {
+    menu (val) {
+      val && setTimeout(() => (this.activePicker = 'YEAR'))
+    },
     newPassword(val) {
       this.matchPass = val === this.confirmNewPassword;
     },
     confirmNewPassword(val) {
-      this.matchPass = val === this.newPassword;
+      this.matchPass = val === this.registParam.password;
     },
     // 확인 msg
     snackbar(val) {
@@ -406,26 +514,69 @@ export default {
       }, 4000)
     },
     nickName(){
-      this.nickNameCheck = false;
+      this.idCheck = false;
     }
   },
   methods: {
+    async registAccount() {
+      if(!this.idCheck){
+        this.snackbarDelay("중복확인을 먼저 진행해주세요");
+        return null;
+      }
+      try {
+        await registerAccount(this.registParam)
+        this.$message.success('등록에 성공하였습니다.')
+        console.log('입력한 멤버 정보 ', this.registParam)
+      } catch (e) {
+        console.log(e)
+        if(e.response.status === 401) {
+          this.loginDialogMsg = "회원가입 오류. 다시한번 회원가입을 진행해주세요"
+          this.registParam.zipCode = ''
+          this.registParam.address1 = ''
+          this.registParam.address2 = ''
+          this.registParam.birthday = ''
+          this.registParam.contact = ''
+          this.registParam.email = ''
+          this.registParam.memberId = ''
+          this.registParam.name = ''
+          this.registParam.password = ''
+          this.confirmNewPassword = ''
+        }
+      } finally {
+        this.e1 = 2
+      }
+    },
+
+
+    onCompl(result) {
+      this.registParam.address1 = result.address
+      this.registParam.zipCode = result.zonecode
+      this.daumPost = false
+    },
+
+    save (date) {
+      this.$refs.menu.save(date)
+    },
     // step 1
     // 중복체크
-    nickCheck(nick){
-      this.$axios.get(' /signup/doublecheck/'+nick)
-          .then(response=>{
-            if(response.data > 0){
-              this.nickNameCheck = false
-              this.snackbarDelay("중복된 닉네임이 존재합니다")
-            }else{
-              this.nickNameCheck = true
-              this.snackbarDelay("사용 가능한 닉네임입니다")
-            }
-          })
-          .catch(error =>{
-            console.log(error.response);
-          })
+    async idDupCheck(id) {
+      console.log('입력한 id :', id)
+
+      try {
+        const res = await getDupMemberId(id)
+        console.log('res', res)
+        let result = res.data
+
+        if (result == false) {
+          this.idCheck = false
+          this.snackbarDelay("중복된 아이디가 존재합니다.")
+        } else {
+          this.idCheck = true
+          this.snackbarDelay("사용 가능한 아이디입니다.")
+        }
+      } catch (e) {
+        console.log(e)
+      }
     },
     snackbarDelay(str){
       this.snackbarMsg = str;
@@ -454,7 +605,7 @@ export default {
     },
 
     signCommit(){
-      if(!this.nickNameCheck){
+      if(!this.idCheck){
         this.snackbarDelay("중복확인을 먼저 진행해주세요");
         return null;
       }
@@ -566,4 +717,33 @@ export default {
   overflow: hidden;
   border: 0;
 }
+.daum {
+  position: absolute;
+  z-index: 10000;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;}
+  .dim{
+    z-index: 1000;
+    position: fixed;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    overflow-y: hidden;
+  }
+  .vue-daum-postcode {
+    margin-top: 5%;
+    height: 60%;
+    z-index: 1001;
+    position: absolute;
+    width: 90%;
+    top: 30%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    overflow: auto;
+  }
+
 </style>

@@ -13,15 +13,15 @@
               show-arrows
           >
             <v-chip
-                v-for="(data,index) in detailTag"
+                v-for="(data,index) in categoryData"
                 :key="index"
                 outlined
                 color="rgb(60,60,60)"
                 text-color="rgb(240,240,240)"
                 class="top-chip"
                 active-class="white"
-                @click="byCategory(data.num)"
-            ><span>{{data.main}}</span>
+                @click="byCategory(data.categoryId)"
+            ><span>{{data.categoryName}}</span>
             </v-chip>
           </v-chip-group>
       </v-col>
@@ -30,24 +30,24 @@
     <v-row style="background-color: rgb(25,25,25)" class="mb-6">
       <!--List Card-->
       <v-col class="no-gutters ml-md-4 ml-sm-4 ml-16">
-        <div style="text-align: start;">
+        <div v-if="productData.productItems && productData.productItems.length > 0" style="text-align: start;">
           <div
               style="display: inline-block;"
               class="pa-3"
-              v-for="(book, index) in bookDatas"
+              v-for="(product, index) in productData.productItems"
               :key="index"
           >
             <v-card
-                style="height: 100%; overflow: hidden; width: 150px"
+                style="height: 100%; overflow: hidden; width: 200px"
                 elevation="4"
                 tile
             >
               <v-img
-                  :src="book.bookThumb"
+                  :src="product.mainImg"
                   alt="bookThumb"
                   height="100%"
                   loading="lazy"
-                  @click="widthSize(book)"
+                  @click="widthSize(product)"
               >
                 <template v-slot:placeholder>
                   <v-row
@@ -62,8 +62,16 @@
                   </v-row>
                 </template>
               </v-img>
+              <div>
+                {{ product.title }}
+              </div>
             </v-card>
           </div>
+        </div>
+        <div v-else>
+          <span style="color: white">
+            해당하는 카테고리의 제품이 존재하지않습니다.
+          </span>
         </div>
       </v-col>
 
@@ -95,14 +103,14 @@
 
                   <v-img
                       class="select-book-img"
-                      :src="selectBook.bookThumb"
+                      :src="productDetail.mainImg"
                   ></v-img>
 
                 <v-col cols="12" md="10">
-                  <h4 class="pt-4" style="color: rgb(220,220,220)"> {{selectBook.bookTitle}} </h4>
+                  <h4 class="pt-4" style="color: rgb(220,220,220)"> {{productDetail.title}} </h4>
                 </v-col>
 
-                 <v-card-subtitle style="color: rgb(220,220,220)">{{selectBook.bookAuthor}}&nbsp;|&nbsp;{{selectBook.bookPublisher}}</v-card-subtitle>
+                 <v-card-subtitle style="color: rgb(220,220,220)">{{productDetail.price}}원</v-card-subtitle>
 
 
                 <div>
@@ -149,7 +157,7 @@
                             v-on="on"
                             elevation="2"
                             fab color="rgb(50,50,50)"
-                            @click.stop="setComponentData(selectBook.bid)"
+                            @click.stop="setComponentData(productDetail.productId)"
                         >
                           <v-icon color="pink" large>
                             mdi-heart
@@ -167,14 +175,14 @@
                             v-on="on"
                             elevation="2"
                             fab color="rgb(50,50,50)"
-                            @click.stop="detailView(selectBook.bid)"
+                            @click.stop="detailView(productDetail.productId)"
                         >
                           <v-icon color="yellow darken-2" large>
-                            mdi-book-open-variant
+                            mdi-cake-layered
                           </v-icon>
                         </v-btn>
                       </template>
-                      <span>책 보러가기</span>
+                      <span>상품 보러가기</span>
                     </v-tooltip>
                   </v-col>
                 </v-card-actions>
@@ -269,7 +277,8 @@
 <script>
 import vClickOutside from 'v-click-outside';
 import SearchMenu from "@/views/SearchMenu";
-import { getMemberList } from "@/api/account"
+import {getProductList} from "@/api/product";
+import {getCategoryList} from "@/api/common";
 
 export default {
   name: "About",
@@ -288,27 +297,14 @@ export default {
     cartDialogMsg : '',
 
     //선택된 책 보기
-    show : {data:false , bid: null},
+    show : {data:false , productId: null},
     selectBook : '',
     selectKeywords : '',
 
 
     //상단 카테고리
     tab : null,
-    detailTag : [
-      { main : '전체' },
-      { main: '소설', num: '00', },
-      { main : '시/에세이', num: '01', },
-      { main : '자기계발', num: '02', },
-      { main : '인문', num: '03', },
-      { main : '역사/문화', num: '04', },
-      { main : '종교', num: '05', },
-      { main : '정치/사회', num: '06', },
-      { main : '예술/대중문화', num: '07', },
-      { main : '과학', num: '08', },
-      { main : '기술/공학', num: '09', },
-      { main : '컴퓨터/IT', num: '10', },
-    ],
+
     completeData : [],
     inputMsg : '',
 
@@ -317,7 +313,11 @@ export default {
       page: 1,
       pageSize: 10,
       keyword: '',
+      categoryId: ''
     },
+    productData: [],
+    categoryData: [],
+    productDetail: {},
 
     //컴포넌트 관련 데이터 (Dialog)
     dialog: false,              //wishlist Dialog
@@ -345,14 +345,15 @@ export default {
     this.$eventBus.$on('searchData', (payload)=>{
       console.log(payload);
     });
-    this.getMembers()
+    this.getProduct()
+    this.getCategory()
   },
 
   methods: {
     //search
     //Get Main Book Info
 /*    getBookInfo(){
-      this.$axios.get('book/info')
+      this.$axios.get('product/info')
           .then(response=>{
             this.bookDatas = response.data
           })
@@ -361,49 +362,100 @@ export default {
           })
     },*/
 
-    getMembers() {
-
+    async getProduct() {
       try {
-        const res = getMemberList(this.searchQuery)
-        console.log(res)
+        const res = getProductList(this.searchQuery)
+        console.log('res', res)
+        this.productData = (await res).data
+        console.log('productData', this.productData)
       } catch (e) {
         console.log(e)
       }
     },
 
+    async getCategory() {
+      this.categoryData = [
+        { categoryId: '', categoryName: '전체' }
+      ]
+      try {
+        const res = getCategoryList()
+        console.log('res', res)
+        const result = (await res).data.categoryItems
+        result.forEach(aaa => {
+          this.categoryData.push({
+            categoryName: aaa.categoryName,
+            categoryId: aaa.categoryId
+          })
+        })
+        console.log('categoryData', this.categoryData)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
+    byCategory(categoryId) {
+      console.log(categoryId)
+      this.searchQuery.categoryId = categoryId
+      this.getProduct()
+    },
+
+    async getProductDetail(product) {
+      if(this.show.data === true){  //책 정보가 열려있을때
+        if(this.show.productId === product.productId){ //같은 책이라면 정보 닫기
+          this.show.data= !this.show.data
+        }
+      }else{  //닫혀있으면 열기
+        this.show.data= !this.show.data
+      }
+      this.show.productId = product.productId
+      this.productDetail=product
+      // this.selectKeywords = product.bookKeyword.split(',')
+
+/*      console.log('productId', product.productId)
+      try {
+        const res = getProductDetailByProductId(product.productId)
+        console.log('res', res)
+        this.productDetail = (await res).data
+        console.log('productDetail', this.productDetail)
+      } catch (e) {
+        console.log(e)
+      }*/
+    },
+
     //화면 크기에 따라 다른 method
-    widthSize(book){
+    widthSize(product){
       let x = window.innerWidth
 
       if(x>=600){
-        this.openInfo(book)
+        //this.openInfo(product)
+        this.getProductDetail(product)
       }else{
-        this.detailView(book.bid)
+        this.getProductDetail(product)
       }
     },
     //책 보러가기
-    detailView(bid){
-      this.$router.push({name: 'DetailView' ,query: {bid}});
+    detailView(productId){
+      this.$router.push('/detailView/' + productId)
     },
     //Select Book Info
-    openInfo(book){
+    openInfo(product){
       if(this.show.data === true){  //책 정보가 열려있을때
-         if(this.show.bid === book.bid){ //같은 책이라면 정보 닫기
+         if(this.show.bid === product.productId){ //같은 책이라면 정보 닫기
          this.show.data= !this.show.data
         }
       }else{  //닫혀있으면 열기
         this.show.data= !this.show.data
       }
-      this.show.bid = book.bid
-      this.selectBook=book
-      this.selectKeywords = book.bookKeyword.split(',')
+      this.show.bid = product.productId
+      this.selectBook=product
+      // this.selectKeywords = product.bookKeyword.split(',')
     },
 
 
 
     //키워드로 검색
 /*    keywordSearch(data){
-      this.$axios.get("book/keyword/"+data)
+      this.$axios.get("product/keyword/"+data)
           .then(response=>{
             this.bookDatas = response.data
           }).catch(error =>{
@@ -435,7 +487,7 @@ export default {
       if(num==null){
         this.getBookInfo()
       }else{
-        this.$axios.get("book/category/"+num)
+        this.$axios.get("product/category/"+num)
             .then(response=>{
               this.bookDatas = response.data
             }).catch(error =>{

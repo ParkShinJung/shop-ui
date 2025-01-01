@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
-export function getMemberList(params) {
-    const url = '/account/member'
+export function getProductList(params) {
+    const url = '/product'
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -11,18 +11,8 @@ export function getMemberList(params) {
     return request.get(url, config)
 }
 
-export function registerAccount(params) {
-    const url = '/account/member'
-    const config = {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }
-    return request.post(url, params, config)
-}
-
-export function getDupMemberId(memberId) {
-    const url = '/account/signup/id/' + memberId
+export function getProductDetailByProductId(productId) {
+    const url = '/product/' + productId
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -31,8 +21,18 @@ export function getDupMemberId(memberId) {
     return request.get(url, config)
 }
 
-export function logInCheck(memberId, params) {
-    const url = '/account/checkLogin/' + memberId
+export function getProductListByCategoryId(categoryId) {
+    const url = '/product/category/' + categoryId
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+    return request.get(url, config)
+}
+
+export function registerProductReview(params) {
+    const url = '/product/review'
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -40,3 +40,4 @@ export function logInCheck(memberId, params) {
     }
     return request.post(url, params, config)
 }
+

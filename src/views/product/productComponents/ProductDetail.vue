@@ -4,7 +4,7 @@
 
     <!-- 우측 Nav -->
     <v-row>
-      <v-col cols="2" md="2" class="ml-8 pt-8 mt-8 detail-menu">
+      <v-col cols="2" md="2" class="ml-8 pt-8 detail-menu" style="margin-top: 120px">
           <v-row class="pa-0 ma-1 ml-3">
             <v-col @click="$vuetify.goTo(0)" cols="12" class="nav-menu-main-text">1. {{bookData.bookTitle}}</v-col>
           </v-row>
@@ -14,15 +14,15 @@
             </v-col>
             <v-col cols="8" class="pa-0 ma-0 nav-menu-sub-text">
               <v-col class="pa-1" @click="moveScroll('content_id')">
-                책 소개
+                제품 소개
                 <v-icon class="pb-1 pl-3" size="18" color="yellow darken-2">mdi-book</v-icon>
               </v-col>
               <v-col class="pa-1" @click="moveScroll('index_id')">
-                책 목차
+                제품 이미지
               </v-col>
-              <v-col class="pa-1" @click="moveScroll('preview_id')">
-                출간자 서평
-              </v-col>
+<!--              <v-col class="pa-1" @click="moveScroll('preview_id')">-->
+<!--                출간자 서평-->
+<!--              </v-col>-->
             </v-col>
           </v-row>
 
@@ -44,7 +44,7 @@
             </v-col>
           </v-row>
           <v-row class="pa-0 ma-1 ml-3 pb-8">
-            <v-col cols="12" class="nav-menu-main-text" @click="moveScroll('recommend_id')">3. 비슷한 책 추천</v-col>
+            <v-col cols="12" class="nav-menu-main-text" @click="moveScroll('recommend_id')">3. 비슷한 제품 추천</v-col>
           </v-row>
           <v-row class="pa-0 ma-1 ml-4 mb-5">
             <v-btn icon color="rgb(40,40,40)" height="45px" width="200px"
@@ -89,8 +89,8 @@
                   width=""
                   tile>
                 <v-img
-                    :src="bookData.bookThumb"
-                    :lazy-src="bookData.bookThumb"
+                    :src="productInfo.mainImg"
+                    :lazy-src="productInfo.mainImg"
                     alt="bookThumb"
                     height="100%"
                     max-width="200px"
@@ -118,17 +118,14 @@
 
             <v-row>
               <v-col cols="12" class="ml-md-0 ml-4">
-                <span class="white--text" style="font-size: 25px">{{bookData.bookTitle}}</span>
-                <span class="grey--text" style="font-size: 20px"> {{bookData.bookSubTitle}}</span>
+                <span class="white--text" style="font-size: 25px">{{productInfo.title}}</span>
               </v-col>
             </v-row>
 
             <v-row class="ma-0 pa-0">
               <v-col cols="12" class="ma-0 pa-0 ml-md-0 ml-4">
                 <div>
-                  <span class="grey--text" style="font-size: 14px">{{bookData.bookAuthor}}</span>
-                  <span class="grey--text" style="font-size: 14px">&nbsp;&nbsp;|&nbsp;&nbsp;{{bookData.bookPublisher}}</span>
-                  <span class="grey--text" style="font-size: 14px">&nbsp;&nbsp;|&nbsp;&nbsp;{{bookData.bookPublishedDate}} 출간</span>
+                  <span class="grey--text" style="font-size: 14px">{{productInfo.subtitle}}</span>
                 </div>
               </v-col>
             </v-row>
@@ -137,10 +134,21 @@
 
             <v-row class="pl-4">
               <v-col>
-                <v-row>
+                <v-row v-if="productInfo.price === productInfo.totalPrice">
                   <v-btn color="rgb(40,40,40)" height="60px" disabled class="price-card d-flex flex-column">
                     <span class="white--text" style="font-size: 14px">판매가: </span>
-                    <span v-html="bookData.bookSalePrice" class="white--text pl-1" style="font-size: 20px"></span>
+                    <span v-html="productInfo.price" class="white--text pl-1" style="font-size: 20px;"/>
+                    <span class="white--text" style="font-size: 14px;">원</span>
+                  </v-btn>
+                </v-row>
+                <v-row v-else>
+                  <v-btn color="rgb(40,40,40)" height="60px" disabled class="price-card d-flex flex-column">
+                    <span class="white--text" style="font-size: 14px">판매가: </span>
+                    <span v-html="productInfo.price" class="white--text pl-1" style="font-size: 17px; text-decoration:line-through"/>
+                    <span class="white--text" style="font-size: 12px;">원</span>
+                    <span v-html="productInfo.discountRate" class="yellow--text" style="font-size: small"/>
+                    <span class="yellow--text" style="font-size: small">%</span>
+                    <span v-html="productInfo.totalPrice" class="white--text pl-1" style="font-size: 20px"/>
                     <span class="white--text" style="font-size: 14px" >원</span>
                   </v-btn>
                 </v-row>
@@ -195,7 +203,7 @@
             <v-card class="elevation-2" elevation="0" width="95%" color="rgb(40,40,40)">
               <v-card-title class="mb-4">
                <v-icon class="pr-3  yellow--text text--darken-2" size="36">mdi-book</v-icon>
-                <span class="grey--text text--lighten-1" style="font-size: 30px; font-weight: bold" > 책 소개 </span>
+                <span class="grey--text text--lighten-1" style="font-size: 30px; font-weight: bold" > 제품 소개 </span>
               </v-card-title>
               <v-card-text>
                 <span class="grey--text text--lighten-1" v-html="bookData.bookContent"></span>
@@ -209,7 +217,7 @@
             <v-card class="elevation-2" elevation="0" width="95%" color="rgb(40,40,40)">
               <v-card-title class="mb-4">
                 <v-icon class="pr-3  yellow--text text--darken-2" size="36">mdi-book-multiple</v-icon>
-                <span class="grey--text text--lighten-1" style="font-size: 30px; font-weight: bold"> 책 목차 </span>
+                <span class="grey--text text--lighten-1" style="font-size: 30px; font-weight: bold"> 제품 이미지 </span>
               </v-card-title>
               <v-card-text>
                 <span class="grey--text text--lighten-1" v-html="bookData.bookIndex"></span>
@@ -219,19 +227,19 @@
 
           <div style="height: 120px" id="preview_id"></div>
 
-          <v-timeline-item color="yellow darken-2" fill-dot style="z-index:5;" >
+<!--          <v-timeline-item color="yellow darken-2" fill-dot style="z-index:5;" >
             <v-card class="elevation-2" elevation="0" width="95%" color="rgb(40,40,40)">
               <v-card-title class="mb-4">
-                <v-icon class="pb-1 pr-3 yellow--text text--darken-2" size="36">mdi-book-open-variant</v-icon>
-                <span class="grey--text text--lighten-1"  style="font-size: 30px; font-weight: bold">
+                <v-icon class="pb-1 pr-3 yellow&#45;&#45;text text&#45;&#45;darken-2" size="36">mdi-book-open-variant</v-icon>
+                <span class="grey&#45;&#45;text text&#45;&#45;lighten-1"  style="font-size: 30px; font-weight: bold">
                   출간자 서평
                 </span>
               </v-card-title>
               <v-card-text>
-                <span class="grey--text text--lighten-1" v-html="bookData.bookPreview"></span>
+                <span class="grey&#45;&#45;text text&#45;&#45;lighten-1" v-html="bookData.bookPreview"></span>
               </v-card-text>
             </v-card>
-          </v-timeline-item>
+          </v-timeline-item>-->
 
           <div style="height: 80px" id="comment_id"></div>
         </v-timeline>
@@ -354,7 +362,7 @@
           <v-card-text>
             <div>
               <ul>
-                <li>카테고리 추가는 메인페이지 > 책 등록시 가능합니다</li>
+                <li>카테고리 추가는 메인페이지 > 제품 등록시 가능합니다</li>
                 <li>새로 만들어진 카테고리는 자동으로 공개처리됩니다.</li>
                 <li>카테고리 관리는 마이페이지 > 위시리스트 > 나의 찜목록 으로 이동하시면 가능합니다.</li>
               </ul>
@@ -385,8 +393,9 @@
 </template>
 
 <script>
-import CommentComponent from "@/views/book/bookComponents/CommentComponent";
-import Recommend from "@/views/book/bookComponents/Recommend"
+import CommentComponent from "@/views/product/productComponents/CommentComponent";
+import Recommend from "@/views/product/productComponents/Recommend"
+import { getProductDetailByProductId } from "@/api/product"
 export default {
   name: "BookDetailComponent",
   components: {Recommend, CommentComponent},
@@ -396,6 +405,9 @@ export default {
       bid: this.$route.query.bid,
       bookData : [],
       keyword : '',
+
+      productId: this.$route.params.productId,
+      productInfo: {},
 
       //컴포넌트 관련 데이터 (Dialog)
       dialog: false,              //wishlist Dialog
@@ -416,7 +428,7 @@ export default {
       ],
 
       detailItem: [
-        {icon: "mdi-book-open-page-variant", text: 'Page'},
+        {icon: "mdi-book", text: 'Page'},
         {icon: "mdi-move-resize", text: 'Dimensions'},
         {icon: "mdi-weight", text: 'Weight'},
         {icon: "mdi-barcode", text: 'ISBN-10'},
@@ -433,6 +445,10 @@ export default {
       this.$vuetify.goTo(0)
     }
   },
+  created() {
+    console.log('productId', this.productId)
+    this.init()
+  },
   computed:{
     // 컴포넌트에서 페이지 변경
     component() {
@@ -442,6 +458,21 @@ export default {
   },
 
   methods: {
+    init() {
+      this.getProductInfo()
+    },
+    async getProductInfo() {
+      try {
+        const res = getProductDetailByProductId(this.productId)
+
+        this.productInfo = (await res).data
+
+        console.log('productInfo', this.productInfo)
+        console.log(res)
+      } catch (e) {
+        console.log(e)
+      }
+    },
     getBookDetail(){
       this.$axios.get('book/'+this.bid)
           .then(response=>{
@@ -572,4 +603,9 @@ export default {
   }
 }
 
+.ratePosition {
+  vertical-align : text-top;
+  font-size: small;
+  float: top;
+}
 </style>
